@@ -10,5 +10,11 @@ public class DmnStageApiApplication {
         SpringApplication.run(DmnStageApiApplication.class, args);
         /*aaaaa*/
         /*Edit*/
+
+        /*String path;
+        String pathFormat="api.dmnstage.com/img2/#Category#/#Product#/#Subproduct#/#Year#-#Month#-#Day#.jpg";
+        pathFormat=pathFormat.replace("#Category#",Subproduct.pro)*/
+
+
     }
 }
