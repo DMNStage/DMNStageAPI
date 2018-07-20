@@ -50,6 +50,7 @@ public class Category implements Serializable {
     //with Client
     @ManyToMany(mappedBy = "categories", fetch = FetchType.LAZY)
     private List<Client> clients = new ArrayList<Client>();
+
     // With Product
     @OneToMany(mappedBy = "category", fetch = FetchType.LAZY)
     private List<Product> products = new ArrayList<Product>();
