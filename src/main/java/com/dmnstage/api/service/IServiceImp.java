@@ -16,16 +16,18 @@ public class IServiceImp implements IService {
     @Autowired
     private UserRepository userRepository;
     @Override
-    public void newUser(User user) {
+    public User newUser(User user) {
         user.setEmail(user.getEmail().toLowerCase());
         user.setUsername(user.getUsername().toLowerCase());
         user.setPassword(new BCryptPasswordEncoder().encode(user.getPassword()));
-
+        userRepository.save(user);
+        return user;
     }
 
     @Override
-    public void saveUser(User user) {
+    public User saveUser(User user) {
 
+        return user;
     }
 
     @Override

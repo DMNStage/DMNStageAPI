@@ -7,9 +7,9 @@ import java.util.List;
 
 public interface IService {
 
-    void newUser(User user);
+    User newUser(User user);
 
-    void saveUser(User user);
+    User saveUser(User user);
 
     User getAdminById(int id);
 
