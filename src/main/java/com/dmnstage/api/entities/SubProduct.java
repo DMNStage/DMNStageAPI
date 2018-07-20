@@ -57,4 +57,14 @@ public class SubProduct implements Serializable {
     public void setProduct(Product product) {
         this.product = product;
     }
+
+    @Override
+    public String toString() {
+        return "SubProduct{" +
+                "id=" + id +
+                ", name='" + name + '\'' +
+                ", nameInPath='" + nameInPath + '\'' +
+                ", product=" + product +
+                '}';
+    }
 }

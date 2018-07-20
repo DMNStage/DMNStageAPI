@@ -48,4 +48,14 @@ public class Client extends User implements Serializable {
         this.categories = categories;
     }
     //-----
+
+
+    @Override
+    public String toString() {
+        return "Client{" +
+                super.toString() +
+                " organizationName='" + organizationName + '\'' +
+                ", categories=" + categories +
+                '}';
+    }
 }

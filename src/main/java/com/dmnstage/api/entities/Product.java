@@ -50,6 +50,7 @@ public class Product {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "category_id")
     private Category category;
+
     // With SubProduct
     @OneToMany(mappedBy = "product", fetch = FetchType.LAZY)
     private List<SubProduct> SubProducts = new ArrayList<SubProduct>();
@@ -73,5 +74,16 @@ public class Product {
 
     public void setSubProducts(List<SubProduct> subProducts) {
         SubProducts = subProducts;
+    }
+
+    @Override
+    public String toString() {
+        return "Product{" +
+                "id=" + id +
+                ", name='" + name + '\'' +
+                ", nameInPath='" + nameInPath + '\'' +
+                ", category=" + category +
+                ", SubProducts=" + SubProducts +
+                '}';
     }
 }
