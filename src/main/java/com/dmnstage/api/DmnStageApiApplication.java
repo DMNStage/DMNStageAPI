@@ -7,8 +7,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.transaction.annotation.Transactional;
+
+//import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
 @SpringBootApplication
 public class DmnStageApiApplication implements CommandLineRunner {
@@ -34,7 +35,7 @@ public class DmnStageApiApplication implements CommandLineRunner {
         service.newUser(A1);
         User U = service.getAdminById(1);
 
-        System.out.println(new BCryptPasswordEncoder().matches("654321", U.getPassword()));
+        //System.out.println(new BCryptPasswordEncoder().matches("654321", U.getPassword()));
 
 
 
