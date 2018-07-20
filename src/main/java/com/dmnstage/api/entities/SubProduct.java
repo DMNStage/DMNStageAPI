@@ -3,6 +3,7 @@ package com.dmnstage.api.entities;
 import javax.persistence.*;
 import java.io.Serializable;
 
+@Entity
 public class SubProduct implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
