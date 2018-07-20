@@ -12,7 +12,7 @@ public class DmnStageApiApplication {
         /*Edit*/
 
         /*String path;
-        String pathFormat="api.dmnstage.com/img2/#Category#/#Product#/#Subproduct#/#Year#-#Month#-#Day#.jpg";
+        String pathFormat="api.dmnstage.com/img/#Category#/#Product#/#Subproduct#/#Year#-#Month#-#Day#.jpg";
         pathFormat=pathFormat.replace("#Category#",Subproduct.pro)*/
 
 
