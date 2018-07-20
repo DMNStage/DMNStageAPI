@@ -1,8 +1,6 @@
 package com.dmnstage.api.entities;
 
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
+import javax.persistence.*;
 import java.io.Serializable;
 
 public class SubProduct implements Serializable {
@@ -44,5 +42,18 @@ public class SubProduct implements Serializable {
 
     public void setNameInPath(String nameInPath) {
         this.nameInPath = nameInPath;
+    }
+
+    // With Product
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "product_id")
+    private Product product;
+
+    public Product getProduct() {
+        return product;
+    }
+
+    public void setProduct(Product product) {
+        this.product = product;
     }
 }

@@ -1,9 +1,8 @@
 package com.dmnstage.api.entities;
 
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
+import javax.persistence.*;
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity
 public class Product {
@@ -45,5 +44,34 @@ public class Product {
 
     public void setNameInPath(String nameInPath) {
         this.nameInPath = nameInPath;
+    }
+
+    // With Category
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "category_id")
+    private Category category;
+    // With SubProduct
+    @OneToMany(mappedBy = "product", fetch = FetchType.LAZY)
+    private List<SubProduct> SubProducts = new ArrayList<SubProduct>();
+
+    public Category getCategory() {
+        return category;
+    }
+
+    public void setCategory(Category category) {
+        this.category = category;
+    }
+
+    public void addSubProduct(SubProduct subProduct) {
+        SubProducts.add(subProduct);
+        subProduct.setProduct(this);
+    }
+
+    public List<SubProduct> getSubProducts() {
+        return SubProducts;
+    }
+
+    public void setSubProducts(List<SubProduct> subProducts) {
+        SubProducts = subProducts;
     }
 }
