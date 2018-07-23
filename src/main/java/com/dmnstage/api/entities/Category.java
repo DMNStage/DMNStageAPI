@@ -1,5 +1,7 @@
 package com.dmnstage.api.entities;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import javax.persistence.*;
 import java.io.Serializable;
 import java.util.ArrayList;
@@ -50,6 +52,7 @@ public class Category implements Serializable {
 
     //with Client
     @ManyToMany(mappedBy = "categories", fetch = FetchType.LAZY)
+    @JsonIgnore
     private List<Client> clients = new ArrayList<Client>();
 
     // With Product

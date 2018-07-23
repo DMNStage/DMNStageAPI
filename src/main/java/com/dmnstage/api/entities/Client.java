@@ -1,7 +1,5 @@
 package com.dmnstage.api.entities;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
-
 import javax.persistence.*;
 import java.io.Serializable;
 import java.util.ArrayList;
@@ -36,7 +34,6 @@ public class Client extends User implements Serializable {
             joinColumns = @JoinColumn(name = "client_id"),
             inverseJoinColumns = @JoinColumn(name = "category_id")
     )
-    @JsonIgnore
     private List<Category> categories = new ArrayList<Category>();
 
     public void addCategory(Category category) {
