@@ -26,11 +26,12 @@ public class DmnStageApiApplication implements CommandLineRunner {
 
     @Override
     @Transactional
-    public void run(String... args) throws Exception {
+    public void run(String... args) {
 
         // derti User A1 = new Admin(); ma7chemtich tbda b MAJ hhhhhh
         //Thread.sleep(6000);
         //System.out.println(admin1.toString());
+        //hahiya modif
 
         User admin1 = service.newUser(new Admin("AbdellahASKI", "654321", "Abdellah@aski.me", "+212707970909", "Abdellah", "ASKI"));
         User admin2 = service.newUser(new Admin("kumohira", "654321", "youssef@naitsaid.me", "+21200000000", "Youssef", "NAIT SAID"));
