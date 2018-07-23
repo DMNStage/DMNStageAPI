@@ -1,21 +1,24 @@
 package com.dmnstage.api.entities;
 
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Id;
 import java.io.Serializable;
 
 @Entity
-public class Configaasqs implements Serializable {
+public class Config implements Serializable {
     @Id
+    @Column(name = "ConfKey")
     private String key;
+    @Column(name = "ConfVal")
     private String value;
 
-    public Configaasqs(String key, String value) {
+    public Config(String key, String value) {
         this.key = key;
         this.value = value;
     }
 
-    public Configaasqs() {
+    public Config() {
     }
 
     public String getKey() {

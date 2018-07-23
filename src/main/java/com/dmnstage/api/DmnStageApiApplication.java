@@ -36,7 +36,7 @@ public class DmnStageApiApplication implements CommandLineRunner {
         } catch (InterruptedException e) {
             e.printStackTrace();
         }*/
-        //service.setConfigaasqs(new Configaasqs("pathFormat","api.dmnstage.com/img/#Product#-#Subproduct#-#Year#-#Month#-#Day#.jpg"));
+        service.setConfig(new Config("pathFormat", "api.dmnstage.com/img/#Product#-#Subproduct#-#Year#-#Month#-#Day#.jpg"));
 
         User admin1 = service.newUser(new Admin("AbdellahASKI", "654321", "Abdellah@aski.me", "+212707970909", "Abdellah", "ASKI"));
         User admin2 = service.newUser(new Admin("kumohira", "654321", "youssef@naitsaid.me", "+21200000000", "Youssef", "NAIT SAID"));

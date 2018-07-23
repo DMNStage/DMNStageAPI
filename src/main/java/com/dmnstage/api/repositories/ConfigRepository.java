@@ -1,10 +1,10 @@
 package com.dmnstage.api.repositories;
 
-import com.dmnstage.api.entities.Configaasqs;
+import com.dmnstage.api.entities.Config;
 import org.springframework.data.jpa.repository.JpaRepository;
 
-public interface ConfigRepository extends JpaRepository<Configaasqs, String> {
+public interface ConfigRepository extends JpaRepository<Config, String> {
 
-    Configaasqs findByKey(String key);
+    Config findBykey(String key);
 
 }

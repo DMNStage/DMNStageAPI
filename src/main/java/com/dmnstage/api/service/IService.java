@@ -5,10 +5,10 @@ import com.dmnstage.api.entities.*;
 import java.util.List;
 
 public interface IService {
-    //Configaasqs
-    Configaasqs getConfigByKey(String key);
+    //Config
+    Config getConfigByKey(String key);
 
-    Configaasqs setConfigaasqs(Configaasqs configaasqs);
+    Config setConfig(Config config);
 
     //Relation between Classes
     void addSubProductToProduct(SubProduct subProduct, Product product);

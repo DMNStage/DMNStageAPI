@@ -30,13 +30,13 @@ public class IServiceImp implements IService {
     }
 
     @Override
-    public Configaasqs getConfigByKey(String key) {
-        return configRepository.findByKey(key);
+    public Config getConfigByKey(String key) {
+        return configRepository.findBykey(key);
     }
 
     @Override
-    public Configaasqs setConfigaasqs(Configaasqs configaasqs) {
-        return configRepository.save(configaasqs);
+    public Config setConfig(Config config) {
+        return configRepository.save(config);
     }
 
     @Override
@@ -53,7 +53,8 @@ public class IServiceImp implements IService {
     public void mergeClientCategory(Client client, Category category) {
         category.addClient(client);
         client.addCategory(category);
-    }*/
+    }
+    */
 
     @Override
     public void mergeClientProduct(Client client, Product product) {

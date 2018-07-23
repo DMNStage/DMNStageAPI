@@ -53,12 +53,12 @@ public class RestService {
     }
 
     @RequestMapping(value = "/newadmin", method = RequestMethod.POST)
-    public User newUser(@RequestBody Admin admin) {
+    public User newAdmin(@RequestBody Admin admin) {
         return service.newUser(admin);
     }
 
     @RequestMapping(value = "/newclient", method = RequestMethod.POST)
-    public User newUser(@RequestBody Client client) {
+    public User newClient(@RequestBody Client client) {
         return service.newUser(client);
     }
 }
