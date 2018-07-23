@@ -59,6 +59,34 @@ public class RestService {
 
     @RequestMapping(value = "/newclient", method = RequestMethod.POST)
     public User newClient(@RequestBody Client client) {
+
         return service.newUser(client);
     }
+
+    @RequestMapping(value = "/newpermission/{id}", method = RequestMethod.POST)
+    public void setPermissionsToClient(String selectedSubProduct[], @PathVariable Integer id) {
+        for (int i = 0; i < selectedSubProduct.length; i++) {
+            SubProduct subProduct = service.getSubProductById(Integer.parseInt(selectedSubProduct[i]));
+            //Permission p=new permission();
+            // service.addPermissionToSubProduct(p,subProduct);
+            // User u = service.getuserById(id);
+            // service.addPermissionToClient(p,u);
+        }
+
+
+    }
+
+    @RequestMapping(value = "/newproduct", method = RequestMethod.POST)
+    public Product newProduct(@RequestBody Product product) {
+        return service.newProduct(product);
+    }
+
+    @RequestMapping(value = "/newsubproduct/{id}", method = RequestMethod.POST)
+    public SubProduct newSubProduct(@RequestBody SubProduct subProduct, @PathVariable Integer id) {
+        Product product = service.getProductById(id);
+        service.addSubProductToProduct(subProduct, product);
+        return service.newSubProduct(subProduct);
+    }
+
+
 }
