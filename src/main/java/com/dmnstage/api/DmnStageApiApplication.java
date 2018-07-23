@@ -30,12 +30,6 @@ public class DmnStageApiApplication implements CommandLineRunner {
     @Override
     @Transactional
     public void run(String... args) {
-
-        /*try {
-            Thread.sleep(5000);
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }*/
         service.setConfig(new Config("pathFormat", "api.dmnstage.com/img/#Product#-#Subproduct#-#Year#-#Month#-#Day#.jpg"));
 
         User admin1 = service.newUser(new Admin("AbdellahASKI", "654321", "Abdellah@aski.me", "+212707970909", "Abdellah", "ASKI"));
