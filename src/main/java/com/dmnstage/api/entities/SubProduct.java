@@ -1,5 +1,7 @@
 package com.dmnstage.api.entities;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import javax.persistence.*;
 import java.io.Serializable;
 
@@ -11,12 +13,14 @@ public class SubProduct implements Serializable {
 
     private String name;
 
-    private String nameInPath;
+    private String folderName;
 
-    public SubProduct(String name, String nameInPath) {
-        this.name = name;
-        this.nameInPath = nameInPath;
-    }
+    //private String imageName;
+    // With Product
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "product_id")
+    @JsonIgnore
+    private Product product;
 
     public SubProduct() {
     }
@@ -37,18 +41,19 @@ public class SubProduct implements Serializable {
         this.name = name;
     }
 
-    public String getNameInPath() {
-        return nameInPath;
+    public SubProduct(String name, String folderName) {
+        this.name = name;
+        this.folderName = folderName;
+        //this.imageName = imageName;
     }
 
-    public void setNameInPath(String nameInPath) {
-        this.nameInPath = nameInPath;
+    public String getFolderName() {
+        return folderName;
     }
 
-    // With Product
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "product_id")
-    private Product product;
+    public void setFolderName(String folderName) {
+        this.folderName = folderName;
+    }
 
     public Product getProduct() {
         return product;
@@ -63,7 +68,8 @@ public class SubProduct implements Serializable {
         return "SubProduct{" +
                 "id=" + id +
                 ", name='" + name + '\'' +
-                ", nameInPath='" + nameInPath + '\'' +
+                ", folderName='" + folderName + '\'' +
+                //", imageName='" + imageName + '\'' +
                 ", product=" + product +
                 '}';
     }

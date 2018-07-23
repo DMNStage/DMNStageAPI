@@ -1,5 +1,7 @@
 package com.dmnstage.api.entities;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import javax.persistence.*;
 import java.util.ArrayList;
 import java.util.List;
@@ -12,12 +14,12 @@ public class Product {
 
     private String name;
 
-    private String nameInPath;
-
-    public Product(String name, String nameInPath) {
-        this.name = name;
-        this.nameInPath = nameInPath;
-    }
+    private String folderName;
+    // With Category
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "category_id")
+    @JsonIgnore
+    private Category category;
 
     public Product() {
     }
@@ -38,18 +40,18 @@ public class Product {
         this.name = name;
     }
 
-    public String getNameInPath() {
-        return nameInPath;
+    public Product(String name, String folderName) {
+        this.name = name;
+        this.folderName = folderName;
     }
 
-    public void setNameInPath(String nameInPath) {
-        this.nameInPath = nameInPath;
+    public String getFolderName() {
+        return folderName;
     }
 
-    // With Category
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "category_id")
-    private Category category;
+    public void setFolderName(String folderName) {
+        this.folderName = folderName;
+    }
 
     // With SubProduct
     @OneToMany(mappedBy = "product", fetch = FetchType.LAZY)
@@ -81,7 +83,7 @@ public class Product {
         return "Product{" +
                 "id=" + id +
                 ", name='" + name + '\'' +
-                ", nameInPath='" + nameInPath + '\'' +
+                ", folderName='" + folderName + '\'' +
                 ", category=" + category +
                 ", SubProducts=" + SubProducts +
                 '}';
