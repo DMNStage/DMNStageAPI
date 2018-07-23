@@ -18,7 +18,7 @@ public class DmnStageApiApplication implements CommandLineRunner {
     public static void main(String[] args) {
         SpringApplication.run(DmnStageApiApplication.class, args);
         /*String path;
-        String pathFormat="api.dmnstage.com/img/#Category#/#Product#/#Subproduct#/#Year#-#Month#-#Day#.jpg";
+        String pathFormat="api.dmnstage.com/img/#Product#-#Subproduct#-#Year#-#Month#-#Day#.jpg";
         pathFormat=pathFormat.replace("#Category#",Subproduct.pro)*/
 
         //nait test
@@ -39,14 +39,14 @@ public class DmnStageApiApplication implements CommandLineRunner {
         //User U = service.getAdminById(1);
         //System.out.println(new BCryptPasswordEncoder().matches("654321", U.getPassword()));
 
-        Client client1 = (Client) service.newUser(new Client("client1", "654321", "client1@client1.com", "+21200000000", "Client1"));
-        Client client2 = (Client) service.newUser(new Client("client2", "654321", "client2@client2.com", "+21200000000", "Client2"));
+        User client1 = service.newUser(new Client("client1", "654321", "client1@client1.com", "+21200000000", "Client1"));
+        User client2 = service.newUser(new Client("client2", "654321", "client2@client2.com", "+21200000000", "Client2"));
 
         Category teledetection = service.newCategory(new Category("Teledetection", "extranet.marocmeteo.ma/samba/detections/#Product#/#SUBProduct#/#Month##Day#/#SUBProduct#_#Year##Month##Day##Hour##Minute#.jpg"));
         //"http://extranet.marocmeteo.ma/samba/detections/"
 
-        service.mergeClientCategory(client1, teledetection);
-        service.mergeClientCategory(client2, teledetection);
+        service.mergeClientCategory((Client) client1, teledetection);
+        service.mergeClientCategory((Client) client2, teledetection);
 
         Product satelliteStandard = service.newProduct(new Product("Satellite Standard", "sats"));
         Product satelliteDeveloppe = service.newProduct(new Product("Satellite Developpe", "rgbs"));

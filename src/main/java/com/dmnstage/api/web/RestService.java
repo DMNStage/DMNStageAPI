@@ -3,10 +3,7 @@ package com.dmnstage.api.web;
 import com.dmnstage.api.entities.*;
 import com.dmnstage.api.service.IService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -59,5 +56,15 @@ public class RestService {
     @RequestMapping(value = "/getsubproducts", method = RequestMethod.GET)
     public List<SubProduct> getSubProducts() {
         return service.getAllSubProducts();
+    }
+
+    @RequestMapping(value = "/newadmin", method = RequestMethod.POST)
+    public User newUser(@RequestBody Admin admin) {
+        return service.newUser(admin);
+    }
+
+    @RequestMapping(value = "/newclient", method = RequestMethod.POST)
+    public User newUser(@RequestBody Client client) {
+        return service.newUser(client);
     }
 }
