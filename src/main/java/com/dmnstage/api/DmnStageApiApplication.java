@@ -21,7 +21,7 @@ public class DmnStageApiApplication implements CommandLineRunner {
         String pathFormat="api.dmnstage.com/img/#Category#/#Product#/#Subproduct#/#Year#-#Month#-#Day#.jpg";
         pathFormat=pathFormat.replace("#Category#",Subproduct.pro)*/
 
-
+        //nait test
     }
 
     @Override
