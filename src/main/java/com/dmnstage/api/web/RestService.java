@@ -10,8 +10,12 @@ import java.util.List;
 @RestController
 public class RestService {
 
-    @Autowired //injection des dependances
-    private IService service;
+    private final IService service;
+
+    @Autowired
+    public RestService(IService service) {
+        this.service = service;
+    }
 
     @RequestMapping(value = "/getuser/{id}", method = RequestMethod.GET)
     public User getUser(@PathVariable Integer id) {
@@ -26,16 +30,6 @@ public class RestService {
     @RequestMapping(value = "/getclients", method = RequestMethod.GET)
     public List<Client> getClients() {
         return service.getAllClients();
-    }
-
-    @RequestMapping(value = "/getcategory/{id}", method = RequestMethod.GET)
-    public Category getCategory(@PathVariable Integer id) {
-        return service.getCategoryById(id);
-    }
-
-    @RequestMapping(value = "/getcategories", method = RequestMethod.GET)
-    public List<Category> getCategories() {
-        return service.getAllCategories();
     }
 
     @RequestMapping(value = "/getproduct/{id}", method = RequestMethod.GET)

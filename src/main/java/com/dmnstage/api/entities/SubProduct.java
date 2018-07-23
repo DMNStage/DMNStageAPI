@@ -13,7 +13,7 @@ public class SubProduct implements Serializable {
 
     private String name;
 
-    private String folderName;
+    private String pathName;
 
     //private String imageName;
     // With Product
@@ -41,18 +41,18 @@ public class SubProduct implements Serializable {
         this.name = name;
     }
 
-    public SubProduct(String name, String folderName) {
+    public SubProduct(String name, String pathName) {
         this.name = name;
-        this.folderName = folderName;
+        this.pathName = pathName;
         //this.imageName = imageName;
     }
 
-    public String getFolderName() {
-        return folderName;
+    public String getPathName() {
+        return pathName;
     }
 
-    public void setFolderName(String folderName) {
-        this.folderName = folderName;
+    public void setPathName(String pathName) {
+        this.pathName = pathName;
     }
 
     public Product getProduct() {
@@ -68,8 +68,7 @@ public class SubProduct implements Serializable {
         return "SubProduct{" +
                 "id=" + id +
                 ", name='" + name + '\'' +
-                ", folderName='" + folderName + '\'' +
-                //", imageName='" + imageName + '\'' +
+                ", pathName='" + pathName + '\'' +
                 ", product=" + product +
                 '}';
     }

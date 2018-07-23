@@ -14,14 +14,31 @@ public class Product {
 
     private String name;
 
-    private String folderName;
-    // With Category
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "category_id")
+    private String pathName;
+
+    //with Client
+    @ManyToMany(mappedBy = "products", fetch = FetchType.LAZY)
     @JsonIgnore
-    private Category category;
+    private List<Client> clients = new ArrayList<>();
+
+    // With SubProduct
+    @OneToMany(mappedBy = "product", fetch = FetchType.LAZY)
+    private List<SubProduct> SubProducts = new ArrayList<>();
 
     public Product() {
+    }
+
+    public Product(String name, String pathName) {
+        this.name = name;
+        this.pathName = pathName;
+    }
+
+    public void addClient(Client client) {
+        clients.add(client);
+    }
+
+    public List<Client> getClients() {
+        return clients;
     }
 
     public int getId() {
@@ -40,29 +57,12 @@ public class Product {
         this.name = name;
     }
 
-    public Product(String name, String folderName) {
-        this.name = name;
-        this.folderName = folderName;
+    public String getPathName() {
+        return pathName;
     }
 
-    public String getFolderName() {
-        return folderName;
-    }
-
-    public void setFolderName(String folderName) {
-        this.folderName = folderName;
-    }
-
-    // With SubProduct
-    @OneToMany(mappedBy = "product", fetch = FetchType.LAZY)
-    private List<SubProduct> SubProducts = new ArrayList<SubProduct>();
-
-    public Category getCategory() {
-        return category;
-    }
-
-    public void setCategory(Category category) {
-        this.category = category;
+    public void setPathName(String pathName) {
+        this.pathName = pathName;
     }
 
     public void addSubProduct(SubProduct subProduct) {
@@ -83,8 +83,7 @@ public class Product {
         return "Product{" +
                 "id=" + id +
                 ", name='" + name + '\'' +
-                ", folderName='" + folderName + '\'' +
-                ", category=" + category +
+                ", pathName='" + pathName + '\'' +
                 ", SubProducts=" + SubProducts +
                 '}';
     }

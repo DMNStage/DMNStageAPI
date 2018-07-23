@@ -1,7 +1,6 @@
 package com.dmnstage.api.service;
 
 import com.dmnstage.api.entities.*;
-import com.dmnstage.api.repositories.CategoryRepository;
 import com.dmnstage.api.repositories.ProductRepository;
 import com.dmnstage.api.repositories.SubProductRepository;
 import com.dmnstage.api.repositories.UserRepository;
@@ -16,20 +15,22 @@ import java.util.List;
 @Service
 @Transactional
 public class IServiceImp implements IService {
+    private final UserRepository userRepository;
+    private final ProductRepository productRepository;
+    private final SubProductRepository subProductRepository;
+
     @Autowired
-    private UserRepository userRepository;
-    @Autowired
-    private CategoryRepository categoryRepository;
-    @Autowired
-    private ProductRepository productRepository;
-    @Autowired
-    private SubProductRepository subProductRepository;
+    public IServiceImp(UserRepository userRepository, ProductRepository productRepository, SubProductRepository subProductRepository) {
+        this.userRepository = userRepository;
+        this.productRepository = productRepository;
+        this.subProductRepository = subProductRepository;
+    }
 
     @Override
     public void addSubProductToProduct(SubProduct subProduct, Product product) {
         product.addSubProduct(subProduct);
     }
-
+/*
     @Override
     public void addProductToCategory(Product Product, Category category) {
         category.addProduct(Product);
@@ -39,6 +40,12 @@ public class IServiceImp implements IService {
     public void mergeClientCategory(Client client, Category category) {
         category.addClient(client);
         client.addCategory(category);
+    }*/
+
+    @Override
+    public void mergeClientProduct(Client client, Product product) {
+        product.addClient(client);
+        client.addProduct(product);
     }
 
     @Override
@@ -70,20 +77,6 @@ public class IServiceImp implements IService {
         return userRepository.findAllClients();
     }
 
-    @Override
-    public Category newCategory(Category category) {
-        return categoryRepository.save(category);
-    }
-
-    @Override
-    public Category getCategoryById(int id) {
-        return categoryRepository.findById(id);
-    }
-
-    @Override
-    public List<Category> getAllCategories() {
-        return categoryRepository.findAll();
-    }
 
     @Override
     public Product newProduct(Product product) {

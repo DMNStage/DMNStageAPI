@@ -13,25 +13,23 @@ import org.springframework.transaction.annotation.Transactional;
 @SpringBootApplication
 public class DmnStageApiApplication implements CommandLineRunner {
 
+    private final IService service;
+
     @Autowired
-    private IService service;
+    public DmnStageApiApplication(IService service) {
+        this.service = service;
+    }
+
     public static void main(String[] args) {
         SpringApplication.run(DmnStageApiApplication.class, args);
         /*String path;
         String pathFormat="api.dmnstage.com/img/#Product#-#Subproduct#-#Year#-#Month#-#Day#.jpg";
         pathFormat=pathFormat.replace("#Category#",Subproduct.pro)*/
-
-        //nait test
     }
 
     @Override
     @Transactional
     public void run(String... args) {
-
-        // derti User A1 = new Admin(); ma7chemtich tbda b MAJ hhhhhh
-        //Thread.sleep(6000);
-        //System.out.println(admin1.toString());
-        //hahiya modif ( hahiya dial nait)
 
         User admin1 = service.newUser(new Admin("AbdellahASKI", "654321", "Abdellah@aski.me", "+212707970909", "Abdellah", "ASKI"));
         User admin2 = service.newUser(new Admin("kumohira", "654321", "youssef@naitsaid.me", "+21200000000", "Youssef", "NAIT SAID"));
@@ -42,11 +40,8 @@ public class DmnStageApiApplication implements CommandLineRunner {
         User client1 = service.newUser(new Client("client1", "654321", "client1@client1.com", "+21200000000", "Client1"));
         User client2 = service.newUser(new Client("client2", "654321", "client2@client2.com", "+21200000000", "Client2"));
 
-        Category teledetection = service.newCategory(new Category("Teledetection", "extranet.marocmeteo.ma/samba/detections/#Product#/#SUBProduct#/#Month##Day#/#SUBProduct#_#Year##Month##Day##Hour##Minute#.jpg"));
+        // Category teledetection = service.newCategory(new Category("Teledetection", "extranet.marocmeteo.ma/samba/detections/#Product#/#SUBProduct#/#Month##Day#/#SUBProduct#_#Year##Month##Day##Hour##Minute#.jpg"));
         //"http://extranet.marocmeteo.ma/samba/detections/"
-
-        service.mergeClientCategory((Client) client1, teledetection);
-        service.mergeClientCategory((Client) client2, teledetection);
 
         Product satelliteStandard = service.newProduct(new Product("Satellite Standard", "sats"));
         Product satelliteDeveloppe = service.newProduct(new Product("Satellite Developpe", "rgbs"));
@@ -54,11 +49,11 @@ public class DmnStageApiApplication implements CommandLineRunner {
         Product radarDeveloppe = service.newProduct(new Product("Radar Developpe", "srmats"));
         Product foudreStandard = service.newProduct(new Product("Foudre Standard", "foudres"));
 
-        service.addProductToCategory(satelliteStandard, teledetection);
-        service.addProductToCategory(satelliteDeveloppe, teledetection);
-        service.addProductToCategory(radaStandard, teledetection);
-        service.addProductToCategory(radarDeveloppe, teledetection);
-        service.addProductToCategory(foudreStandard, teledetection);
+        service.mergeClientProduct((Client) client1, satelliteStandard);
+        service.mergeClientProduct((Client) client1, satelliteDeveloppe);
+        service.mergeClientProduct((Client) client1, radaStandard);
+        service.mergeClientProduct((Client) client2, radarDeveloppe);
+        service.mergeClientProduct((Client) client2, foudreStandard);
 
         SubProduct canalIR = service.newSubProduct(new SubProduct("Canal IR", "ir")); //image name : nothing
         SubProduct canalVS = service.newSubProduct(new SubProduct("Canal VS", "vs")); //image name : nothing

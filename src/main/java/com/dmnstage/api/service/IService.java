@@ -8,9 +8,10 @@ public interface IService {
     //Relation between Classes
     void addSubProductToProduct(SubProduct subProduct, Product product);
 
-    void addProductToCategory(Product Product, Category category);
+    /* void addProductToCategory(Product Product, Category category);
 
-    void mergeClientCategory(Client client, Category category);
+     void mergeClientCategory(Client client, Category category);*/
+    void mergeClientProduct(Client client, Product product);
 
     //User
     User newUser(User user);
@@ -23,12 +24,6 @@ public interface IService {
 
     List<Client> getAllClients();
 
-    //Category
-    Category newCategory(Category category);
-
-    Category getCategoryById(int id);
-
-    List<Category> getAllCategories();
 
     //Product
     Product newProduct(Product product);

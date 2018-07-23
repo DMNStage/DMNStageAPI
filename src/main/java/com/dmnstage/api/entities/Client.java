@@ -10,6 +10,14 @@ import java.util.List;
 public class Client extends User implements Serializable {
 
     private String organizationName;
+    // with Category
+    @ManyToMany(fetch = FetchType.LAZY)
+    @JoinTable(
+            name = "client_product",
+            joinColumns = @JoinColumn(name = "client_id"),
+            inverseJoinColumns = @JoinColumn(name = "product_id")
+    )
+    private List<Product> products = new ArrayList<>();
 
     public Client() {
     }
@@ -27,35 +35,24 @@ public class Client extends User implements Serializable {
         this.organizationName = organizationName;
     }
 
-    // with Category
-    @ManyToMany(fetch = FetchType.LAZY)
-    @JoinTable(
-            name = "client_category",
-            joinColumns = @JoinColumn(name = "client_id"),
-            inverseJoinColumns = @JoinColumn(name = "category_id")
-    )
-    private List<Category> categories = new ArrayList<Category>();
-
-    public void addCategory(Category category) {
-        categories.add(category);
+    public void addProduct(Product product) {
+        products.add(product);
     }
 
-    public List<Category> getCategories() {
-        return categories;
+    public List<Product> getProducts() {
+        return products;
     }
 
-    public void setCategories(List<Category> categories) {
-        this.categories = categories;
+    public void setProducts(List<Product> products) {
+        this.products = products;
     }
-    //-----
-
 
     @Override
     public String toString() {
         return "Client{" +
                 super.toString() +
                 " organizationName='" + organizationName + '\'' +
-                ", categories=" + categories +
+                ", products=" + products +
                 '}';
     }
 }
