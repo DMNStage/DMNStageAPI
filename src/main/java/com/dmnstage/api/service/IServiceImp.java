@@ -1,6 +1,7 @@
 package com.dmnstage.api.service;
 
 import com.dmnstage.api.entities.*;
+import com.dmnstage.api.repositories.ConfigRepository;
 import com.dmnstage.api.repositories.ProductRepository;
 import com.dmnstage.api.repositories.SubProductRepository;
 import com.dmnstage.api.repositories.UserRepository;
@@ -18,12 +19,24 @@ public class IServiceImp implements IService {
     private final UserRepository userRepository;
     private final ProductRepository productRepository;
     private final SubProductRepository subProductRepository;
+    private final ConfigRepository configRepository;
 
     @Autowired
-    public IServiceImp(UserRepository userRepository, ProductRepository productRepository, SubProductRepository subProductRepository) {
+    public IServiceImp(UserRepository userRepository, ProductRepository productRepository, SubProductRepository subProductRepository, ConfigRepository configRepository) {
         this.userRepository = userRepository;
         this.productRepository = productRepository;
         this.subProductRepository = subProductRepository;
+        this.configRepository = configRepository;
+    }
+
+    @Override
+    public Configaasqs getConfigByKey(String key) {
+        return configRepository.findByKey(key);
+    }
+
+    @Override
+    public Configaasqs setConfigaasqs(Configaasqs configaasqs) {
+        return configRepository.save(configaasqs);
     }
 
     @Override

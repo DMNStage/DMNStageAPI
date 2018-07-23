@@ -5,12 +5,14 @@ import com.dmnstage.api.entities.*;
 import java.util.List;
 
 public interface IService {
+    //Configaasqs
+    Configaasqs getConfigByKey(String key);
+
+    Configaasqs setConfigaasqs(Configaasqs configaasqs);
+
     //Relation between Classes
     void addSubProductToProduct(SubProduct subProduct, Product product);
 
-    /* void addProductToCategory(Product Product, Category category);
-
-     void mergeClientCategory(Client client, Category category);*/
     void mergeClientProduct(Client client, Product product);
 
     //User
@@ -23,7 +25,6 @@ public interface IService {
     List<Admin> getAllAdmins();
 
     List<Client> getAllClients();
-
 
     //Product
     Product newProduct(Product product);
@@ -38,4 +39,5 @@ public interface IService {
     SubProduct getSubProductById(int id);
 
     List<SubProduct> getAllSubProducts();
+
 }
