@@ -13,7 +13,7 @@ public interface IService {
     //Relation between Classes
     void addSubProductToProduct(SubProduct subProduct, Product product);
 
-    void mergeClientProduct(Client client, Product product);
+    void mergeClientSubProduct(Client client, SubProduct subProduct);
 
     //User
     User newUser(User user);
@@ -26,12 +26,22 @@ public interface IService {
 
     List<Client> getAllClients();
 
+    Admin setAdmin(Admin admin);
+
+    Client setClient(Client client);
+
+    void deleteUser(int id);
+
     //Product
     Product newProduct(Product product);
 
     Product getProductById(int id);
 
     List<Product> getAllProducts();
+
+    Product setProduct(Product product);
+
+    void deleteProduct(int id);
 
     //SubProduct
     SubProduct newSubProduct(SubProduct subProduct);
@@ -40,4 +50,7 @@ public interface IService {
 
     List<SubProduct> getAllSubProducts();
 
+    SubProduct setSubProduct(SubProduct subProduct);
+
+    void deleteSubProduct(int id);
 }

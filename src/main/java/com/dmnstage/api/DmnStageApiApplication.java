@@ -50,12 +50,6 @@ public class DmnStageApiApplication implements CommandLineRunner {
         Product radarDeveloppe = service.newProduct(new Product("Radar Developpe", "srmats"));
         Product foudreStandard = service.newProduct(new Product("Foudre Standard", "foudres"));
 
-        service.mergeClientProduct((Client) client1, satelliteStandard);
-        service.mergeClientProduct((Client) client1, satelliteDeveloppe);
-        service.mergeClientProduct((Client) client1, radaStandard);
-        service.mergeClientProduct((Client) client2, radarDeveloppe);
-        service.mergeClientProduct((Client) client2, foudreStandard);
-
         SubProduct canalIR = service.newSubProduct(new SubProduct("Canal IR", "ir")); //image name : nothing
         SubProduct canalVS = service.newSubProduct(new SubProduct("Canal VS", "vs")); //image name : nothing
         SubProduct canalWV = service.newSubProduct(new SubProduct("Canal WV", "wv")); //image name : nothing
@@ -111,5 +105,30 @@ public class DmnStageApiApplication implements CommandLineRunner {
         service.addSubProductToProduct(bassinOumErrabiae, foudreStandard);
         service.addSubProductToProduct(bassinSebou, foudreStandard);
         service.addSubProductToProduct(bassinTensift, foudreStandard);
+
+        service.mergeClientSubProduct((Client) client1, canalIR);
+        service.mergeClientSubProduct((Client) client1, canalVS);
+        service.mergeClientSubProduct((Client) client1, canalWV);
+        service.mergeClientSubProduct((Client) client1, canalIRNB);
+        service.mergeClientSubProduct((Client) client1, canalHRV);
+        service.mergeClientSubProduct((Client) client1, pouvoirPrecipitant);
+        service.mergeClientSubProduct((Client) client1, bispectrale);
+        service.mergeClientSubProduct((Client) client1, couleurNaturelle);
+        service.mergeClientSubProduct((Client) client1, brouillardNuagesBas);
+        service.mergeClientSubProduct((Client) client1, convectionOrage);
+        service.mergeClientSubProduct((Client) client2, mosaicA);
+        service.mergeClientSubProduct((Client) client2, mosaicB);
+        service.mergeClientSubProduct((Client) client2, agadir250);
+        service.mergeClientSubProduct((Client) client2, casa250);
+        service.mergeClientSubProduct((Client) client2, debdou250);
+        service.mergeClientSubProduct((Client) client2, fes250);
+        service.mergeClientSubProduct((Client) client2, foudreMaroc);
+        service.mergeClientSubProduct((Client) client2, lydec);
+        service.mergeClientSubProduct((Client) client2, jorfLasfer);
+        service.mergeClientSubProduct((Client) client2, bassinBouregreg);
+        service.mergeClientSubProduct((Client) client2, bassinLoukos);
+        service.mergeClientSubProduct((Client) client2, bassinOumErrabiae);
+        service.mergeClientSubProduct((Client) client2, bassinSebou);
+        service.mergeClientSubProduct((Client) client2, bassinTensift);
     }
 }

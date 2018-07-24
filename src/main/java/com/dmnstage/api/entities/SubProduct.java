@@ -4,6 +4,8 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import javax.persistence.*;
 import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity
 public class SubProduct implements Serializable {
@@ -15,7 +17,11 @@ public class SubProduct implements Serializable {
 
     private String pathName;
 
-    //private String imageName;
+    //with Client
+    @ManyToMany(mappedBy = "subProducts", fetch = FetchType.LAZY)
+    @JsonIgnore
+    private List<Client> clients = new ArrayList<>();
+
     // With Product
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "product_id")
@@ -23,6 +29,11 @@ public class SubProduct implements Serializable {
     private Product product;
 
     public SubProduct() {
+    }
+
+    public SubProduct(String name, String pathName) {
+        this.name = name;
+        this.pathName = pathName;
     }
 
     public int getId() {
@@ -41,18 +52,24 @@ public class SubProduct implements Serializable {
         this.name = name;
     }
 
-    public SubProduct(String name, String pathName) {
-        this.name = name;
-        this.pathName = pathName;
-        //this.imageName = imageName;
-    }
-
     public String getPathName() {
         return pathName;
     }
 
     public void setPathName(String pathName) {
         this.pathName = pathName;
+    }
+
+    public void addClient(Client client) {
+        clients.add(client);
+    }
+
+    public List<Client> getClients() {
+        return clients;
+    }
+
+    public void setClients(List<Client> clients) {
+        this.clients = clients;
     }
 
     public Product getProduct() {

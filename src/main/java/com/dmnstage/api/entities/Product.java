@@ -1,7 +1,5 @@
 package com.dmnstage.api.entities;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
-
 import javax.persistence.*;
 import java.util.ArrayList;
 import java.util.List;
@@ -16,11 +14,6 @@ public class Product {
 
     private String pathName;
 
-    //with Client
-    @ManyToMany(mappedBy = "products", fetch = FetchType.LAZY)
-    @JsonIgnore
-    private List<Client> clients = new ArrayList<>();
-
     // With SubProduct
     @OneToMany(mappedBy = "product", fetch = FetchType.LAZY)
     private List<SubProduct> SubProducts = new ArrayList<>();
@@ -31,14 +24,6 @@ public class Product {
     public Product(String name, String pathName) {
         this.name = name;
         this.pathName = pathName;
-    }
-
-    public void addClient(Client client) {
-        clients.add(client);
-    }
-
-    public List<Client> getClients() {
-        return clients;
     }
 
     public int getId() {

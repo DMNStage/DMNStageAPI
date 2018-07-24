@@ -29,6 +29,7 @@ public class IServiceImp implements IService {
         this.configRepository = configRepository;
     }
 
+    //Config
     @Override
     public Config getConfigByKey(String key) {
         return configRepository.findBykey(key);
@@ -39,6 +40,7 @@ public class IServiceImp implements IService {
         return configRepository.save(config);
     }
 
+    //Relation between Classes
     @Override
     public void addSubProductToProduct(SubProduct subProduct, Product product) {
         product.addSubProduct(subProduct);
@@ -57,11 +59,12 @@ public class IServiceImp implements IService {
     */
 
     @Override
-    public void mergeClientProduct(Client client, Product product) {
-        product.addClient(client);
-        client.addProduct(product);
+    public void mergeClientSubProduct(Client client, SubProduct subProduct) {
+        subProduct.addClient(client);
+        client.addSubProduct(subProduct);
     }
 
+    //User
     @Override
     public User newUser(User user) {
         user.setEmail(user.getEmail().toLowerCase());
@@ -91,7 +94,22 @@ public class IServiceImp implements IService {
         return userRepository.findAllClients();
     }
 
+    @Override
+    public Admin setAdmin(Admin admin) {
+        return userRepository.save(admin);
+    }
 
+    @Override
+    public Client setClient(Client client) {
+        return userRepository.save(client);
+    }
+
+    @Override
+    public void deleteUser(int id) {
+        userRepository.deleteById(id);
+    }
+
+    //Product
     @Override
     public Product newProduct(Product product) {
         return productRepository.save(product);
@@ -108,6 +126,17 @@ public class IServiceImp implements IService {
     }
 
     @Override
+    public Product setProduct(Product product) {
+        return productRepository.save(product);
+    }
+
+    @Override
+    public void deleteProduct(int id) {
+        productRepository.deleteById(id);
+    }
+
+    //SubProduct
+    @Override
     public SubProduct newSubProduct(SubProduct subProduct) {
         return subProductRepository.save(subProduct);
     }
@@ -122,5 +151,14 @@ public class IServiceImp implements IService {
         return subProductRepository.findAll();
     }
 
+    @Override
+    public SubProduct setSubProduct(SubProduct subProduct) {
+        return subProductRepository.save(subProduct);
+    }
+
+    @Override
+    public void deleteSubProduct(int id) {
+        subProductRepository.deleteById(id);
+    }
 
 }
