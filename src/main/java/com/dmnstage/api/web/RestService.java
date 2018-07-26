@@ -63,13 +63,10 @@ public class RestService {
     //
     //CREATE
     //
-    // NaitSaid version of newclient : bla mandiro table perm ghi many to many mabin client et subproduct kafiya (chof class diag)
-    // mohim ana ghadi ndirhom bjouj ghi bach ibano lik que c la meme chose (many to many mabin client et subproduct ou bien nzido  class permission)
-    // had la version rah incha2allah ghadi tkhdem ghi b methode wa7da no need ndiro 2 :D
     @RequestMapping(value = "/newclient", method = RequestMethod.POST)
-    public User newClient(@RequestBody Client client /*, String selectedSubProduct[] mli ghadi ndiro l'interface html ghadi nkhedmo b selectedSubProduct[] */) {
+    public User newClient(@RequestBody Client client /*, String selectedSubProduct[] */) {
 
-        String selectedSubProduct[] = new String[3]; //ghi exemple
+        String selectedSubProduct[] = new String[3];
         selectedSubProduct[0] = "1";
         selectedSubProduct[1] = "2";
         selectedSubProduct[2] = "3";
@@ -78,54 +75,18 @@ public class RestService {
 
         SubProduct subProduct;
 
-        for (int i = 0; i < selectedSubProduct.length; i++) {
-            subProduct = service.getSubProductById(Integer.parseInt(selectedSubProduct[i]));
-
-            // ila derna many to many mabin client et subproduc
+        for (String aSelectedSubProduct : selectedSubProduct) {
+            subProduct = service.getSubProductById(Integer.parseInt(aSelectedSubProduct));
             service.mergeClientSubProduct((Client) newClient, subProduct);
-            /*
-            le resultat dial hadi ghadi ikoun le meme dial ila zedna class permission, le resultat ghadi ikoun par exemple:
-            ---------------------------
-            |client_id |sub_product_id|
-            ---------------------------
-            |        5 | 2            |
-            |        5 | 1            |
-            |        5 | 3            |
-            ---------------------------
-            client 5 3endo perm bach ichof subprod 2,1 et 3
-            */
-
-            /* ila zedna Class Permission
-            Permission permission = new permission();
-            service.addPermissionToSubProduct(permission,subProduct);
-            service.addPermissionToClient(permission,newclient);
-            */
         }
         return newClient;
     }
-
-    /*
-    @RequestMapping(value = "/newclient", method = RequestMethod.POST)
-    public User newClient(@RequestBody Client client) {
-        return service.newUser(client);
-    }
-
-    @RequestMapping(value = "/newpermission/{id}", method = RequestMethod.POST)
-    public void setPermissionsToClient(String selectedSubProduct[], @PathVariable Integer id) {
-        for (int i = 0; i < selectedSubProduct.length; i++) {
-            SubProduct subProduct = service.getSubProductById(Integer.parseInt(selectedSubProduct[i]));
-            //Permission p=new permission();
-            // service.addPermissionToSubProduct(p,subProduct);
-            // User u = service.getuserById(id);
-            // service.addPermissionToClient(p,u);
-        }
-    }
-    */
 
     @RequestMapping(value = "/newproduct", method = RequestMethod.POST)
     public Product newProduct(@RequestBody Product product) {
         return service.newProduct(product);
     }
+
     /*
     @RequestMapping(value = "/newsubproduct/{id}", method = RequestMethod.POST)
     public SubProduct newSubProduct(@RequestBody SubProduct subProduct, @PathVariable Integer id) {
@@ -137,7 +98,7 @@ public class RestService {
 
     @RequestMapping(value = "/newsubproduct", method = RequestMethod.POST)
     public SubProduct newSubProduct(@RequestBody SubProduct subProduct/*, String selectedProduct */) {
-        String selectedProduct = "1"; // ghi exemple
+        String selectedProduct = "1";
         Product product = service.getProductById(Integer.parseInt(selectedProduct));
         service.addSubProductToProduct(subProduct, product);
         return service.newSubProduct(subProduct);
@@ -165,9 +126,8 @@ public class RestService {
 
         SubProduct subProduct;
 
-        for (int i = 0; i < selectedSubProduct.length; i++) {
-            subProduct = service.getSubProductById(Integer.parseInt(selectedSubProduct[i]));
-
+        for (String aSelectedSubProduct : selectedSubProduct) {
+            subProduct = service.getSubProductById(Integer.parseInt(aSelectedSubProduct));
             service.mergeClientSubProduct((Client) modifiedClient, subProduct);
         }
 
