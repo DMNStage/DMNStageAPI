@@ -22,6 +22,8 @@ public interface IService {
 
     User getUserById(int id);
 
+    User getUserByUsername(String username);
+
     List<Admin> getAllAdmins();
 
     List<Client> getAllClients();

@@ -85,6 +85,11 @@ public class IServiceImp implements IService {
     }
 
     @Override
+    public User getUserByUsername(String username) {
+        return userRepository.findByUsername(username);
+    }
+
+    @Override
     public List<Admin> getAllAdmins() {
         return userRepository.findAllAdmins();
     }

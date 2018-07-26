@@ -86,7 +86,7 @@ public class SubProduct implements Serializable {
                 "id=" + id +
                 ", name='" + name + '\'' +
                 ", pathName='" + pathName + '\'' +
-                ", product=" + product +
+                //", product=" + product +
                 '}';
     }
 }

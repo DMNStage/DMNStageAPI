@@ -2,7 +2,11 @@ package com.dmnstage.api.web;
 
 import com.dmnstage.api.entities.*;
 import com.dmnstage.api.service.IService;
+import org.json.JSONArray;
+import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -63,23 +67,49 @@ public class RestService {
     //
     //CREATE
     //
+
+    /**
+     * {
+     * "client": {
+     * "username": "b",
+     * "password": "d",
+     * "email": "d",
+     * "phone": "d",
+     * "organizationName": "f"
+     * },
+     * "selectedSubProduct": [
+     * 1,
+     * 2,
+     * 3
+     * ]
+     * }
+     */
     @RequestMapping(value = "/newclient", method = RequestMethod.POST)
-    public User newClient(@RequestBody Client client /*, String selectedSubProduct[] */) {
+    public ResponseEntity<?> newClient(@RequestBody String jsonStr) {
 
-        String selectedSubProduct[] = new String[3];
-        selectedSubProduct[0] = "1";
-        selectedSubProduct[1] = "2";
-        selectedSubProduct[2] = "3";
+        JSONObject jObject = new JSONObject(jsonStr);
+        JSONObject clientJson = jObject.getJSONObject("client");
+        if (service.getUserByUsername(clientJson.getString("username")) == null) {
+            Client client = new Client();
+            client.setUsername(clientJson.getString("username"));
+            client.setPassword(clientJson.getString("password"));
+            client.setEmail(clientJson.getString("email"));
+            client.setPhone(clientJson.getString("phone"));
+            client.setOrganizationName(clientJson.getString("organizationName"));
 
-        User newClient = service.newUser(client);
+            JSONArray subProductJsonArray = jObject.getJSONArray("selectedSubProduct");
 
-        SubProduct subProduct;
+            SubProduct subProduct;
+            for (int i = 0; i < subProductJsonArray.length(); i++) {
+                subProduct = service.getSubProductById(subProductJsonArray.getInt(i));
+                service.mergeClientSubProduct(client, subProduct);
+            }
 
-        for (String aSelectedSubProduct : selectedSubProduct) {
-            subProduct = service.getSubProductById(Integer.parseInt(aSelectedSubProduct));
-            service.mergeClientSubProduct((Client) newClient, subProduct);
+            return new ResponseEntity<>(service.newUser(client), HttpStatus.CREATED);
         }
-        return newClient;
+
+        return new ResponseEntity<>(
+                "Ce nom d'utilisateur existe déjà", HttpStatus.BAD_REQUEST);
     }
 
     @RequestMapping(value = "/newproduct", method = RequestMethod.POST)
@@ -96,10 +126,9 @@ public class RestService {
     }
     */
 
-    @RequestMapping(value = "/newsubproduct", method = RequestMethod.POST)
-    public SubProduct newSubProduct(@RequestBody SubProduct subProduct/*, String selectedProduct */) {
-        String selectedProduct = "1";
-        Product product = service.getProductById(Integer.parseInt(selectedProduct));
+    @RequestMapping(value = "/newsubproduct/{id}", method = RequestMethod.POST)
+    public SubProduct newSubProduct(@RequestBody SubProduct subProduct, @PathVariable(name = "id") Integer selectedProduct) {
+        Product product = service.getProductById(selectedProduct);
         service.addSubProductToProduct(subProduct, product);
         return service.newSubProduct(subProduct);
     }
@@ -108,13 +137,28 @@ public class RestService {
     //UPDATE
     //
     @RequestMapping(value = "/setadmin/{id}", method = RequestMethod.PUT)
-    public User setAdmin(@RequestBody Admin admin, @PathVariable Integer id) {
-        admin.setId(id);
-        return service.setAdmin(admin);
+    public ResponseEntity<?> setAdmin(@RequestBody Admin admin, @PathVariable Integer id) {
+
+        User userInDB = service.getUserById(id);
+        if (userInDB.getUsername().equals(admin.getUsername()) ||
+                (!userInDB.getUsername().equals(admin.getUsername()) && service.getUserByUsername(admin.getUsername()) == null)) {
+            if (admin.getPassword() == null || (admin.getPassword() != null && admin.getPassword().isEmpty()))
+                admin.setPassword(userInDB.getPassword());
+            else {
+                //hash admin.setPassword( HASH(admin.getPassword))
+                admin.setPassword("HASH:" + admin.getPassword());
+            }
+
+            admin.setId(id);
+            return new ResponseEntity<>(service.setAdmin(admin), HttpStatus.OK);
+        }
+
+        return new ResponseEntity<>(
+                "Ce nom d'utilisateur existe déjà", HttpStatus.BAD_REQUEST);
     }
 
-    @RequestMapping(value = "/setclient/{id}", method = RequestMethod.PUT)
-    public User setClient(@RequestBody Client client, @PathVariable Integer id /*, String selectedSubProduct[] */) {
+   /* @RequestMapping(value = "/setclient/{id}", method = RequestMethod.PUT)
+    public User setClient(@RequestBody Client client, @PathVariable Integer id *//*, String selectedSubProduct[] *//*) {
 
         String selectedSubProduct[] = new String[3];
         selectedSubProduct[0] = "1";
@@ -132,7 +176,51 @@ public class RestService {
         }
 
         return modifiedClient;
+    }*/
+
+
+    @RequestMapping(value = "/setclient/{id}", method = RequestMethod.PUT)
+    public ResponseEntity<?> setClient(@RequestBody String jsonStr, @PathVariable Integer id) {
+
+        JSONObject jObject = new JSONObject(jsonStr);
+        JSONObject clientJson = jObject.getJSONObject("client");
+        Client clientForm = new Client();
+        clientForm.setUsername(clientJson.getString("username"));
+        clientForm.setPassword(clientJson.getString("password"));
+        clientForm.setEmail(clientJson.getString("email"));
+        clientForm.setPhone(clientJson.getString("phone"));
+        clientForm.setOrganizationName(clientJson.getString("organizationName"));
+
+        //Getting user from DB
+        User clientInDB = service.getUserById(id);
+        // Checking if the username hasn't been changed or it already exist
+        if (clientInDB.getUsername().equals(clientForm.getUsername()) ||
+                (!clientInDB.getUsername().equals(clientForm.getUsername()) &&
+                        service.getUserByUsername(clientForm.getUsername()) == null)) {
+            //Checking if the password from the Form is empty
+            if (clientForm.getPassword() == null || (clientForm.getPassword() != null && clientForm.getPassword().isEmpty()))
+                clientForm.setPassword(clientInDB.getPassword());//if it's empty, get the password from the DB
+            else {
+                //hash clientForm.setPassword( HASH(clientForm.getPassword))
+                clientForm.setPassword("HASH:" + clientForm.getPassword());//If not hash the new password
+            }
+            clientForm.setId(id);
+
+            JSONArray subProductJsonArray = jObject.getJSONArray("selectedSubProduct");
+
+            SubProduct subProduct;
+            for (int i = 0; i < subProductJsonArray.length(); i++) {
+                subProduct = service.getSubProductById(subProductJsonArray.getInt(i));
+                service.mergeClientSubProduct(clientForm, subProduct);
+            }
+            return new ResponseEntity<>(service.setClient(clientForm), HttpStatus.OK);
+
+        }
+        return new ResponseEntity<>(
+                "Ce nom d'utilisateur existe déjà", HttpStatus.BAD_REQUEST);
+
     }
+
 
     @RequestMapping(value = "/setproduct/{id}", method = RequestMethod.PUT)
     public Product newProduct(@RequestBody Product product, @PathVariable Integer id) {
@@ -140,14 +228,12 @@ public class RestService {
         return service.setProduct(product);
     }
 
-    @RequestMapping(value = "/setsubproduct/{id}", method = RequestMethod.PUT)
-    public SubProduct newSubProduct(@RequestBody SubProduct subProduct, @PathVariable Integer id /*, String selectedProduct */) {
-        String selectedProduct = "2"; // ghi exemple
-        subProduct.setId(id);
-        SubProduct modifiedSubProduct = service.setSubProduct(subProduct);
-        Product product = service.getProductById(Integer.parseInt(selectedProduct));
-        service.addSubProductToProduct(modifiedSubProduct, product);
-        return modifiedSubProduct;
+    @RequestMapping(value = "/setsubproduct/{subProductId}/{productId}", method = RequestMethod.PUT)
+    public SubProduct setSubProduct(@RequestBody SubProduct subProduct, @PathVariable Integer subProductId, @PathVariable Integer productId) {
+        subProduct.setId(subProductId);
+        Product product = service.getProductById(productId);
+        service.addSubProductToProduct(subProduct, product);
+        return service.setSubProduct(subProduct);
     }
 
     //

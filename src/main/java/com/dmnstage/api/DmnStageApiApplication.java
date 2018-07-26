@@ -130,5 +130,6 @@ public class DmnStageApiApplication implements CommandLineRunner {
         service.mergeClientSubProduct((Client) client2, bassinOumErrabiae);
         service.mergeClientSubProduct((Client) client2, bassinSebou);
         service.mergeClientSubProduct((Client) client2, bassinTensift);
+
     }
 }
