@@ -59,15 +59,18 @@ public class RestService {
         return service.getAllSubProducts();
     }
 
-    @RequestMapping(value = "/newadmin", method = RequestMethod.POST)
-    public User newAdmin(@RequestBody Admin admin) {
-        return service.newUser(admin);
-    }
-
     //
     //CREATE
     //
 
+    @RequestMapping(value = "/newadmin", method = RequestMethod.POST)
+    public ResponseEntity<?> newAdmin(@RequestBody Admin admin) {
+
+        if (service.getUserByUsername(admin.getUsername()) == null) {
+            return new ResponseEntity<>(service.newUser(admin), HttpStatus.OK);
+        }
+        return new ResponseEntity<>("Ce nom d'utilisateur existe deja", HttpStatus.BAD_REQUEST);
+    }
     /**
      * {
      * "client": {
@@ -105,26 +108,16 @@ public class RestService {
                 service.mergeClientSubProduct(client, subProduct);
             }
 
-            return new ResponseEntity<>(service.newUser(client), HttpStatus.CREATED);
+            return new ResponseEntity<>(service.newUser(client), HttpStatus.OK);
         }
 
-        return new ResponseEntity<>(
-                "Ce nom d'utilisateur existe déjà", HttpStatus.BAD_REQUEST);
+        return new ResponseEntity<>("Ce nom d'utilisateur existe deja", HttpStatus.BAD_REQUEST);
     }
 
     @RequestMapping(value = "/newproduct", method = RequestMethod.POST)
     public Product newProduct(@RequestBody Product product) {
         return service.newProduct(product);
     }
-
-    /*
-    @RequestMapping(value = "/newsubproduct/{id}", method = RequestMethod.POST)
-    public SubProduct newSubProduct(@RequestBody SubProduct subProduct, @PathVariable Integer id) {
-        Product product = service.getProductById(id);
-        service.addSubProductToProduct(subProduct, product);
-        return service.newSubProduct(subProduct);
-    }
-    */
 
     @RequestMapping(value = "/newsubproduct/{id}", method = RequestMethod.POST)
     public SubProduct newSubProduct(@RequestBody SubProduct subProduct, @PathVariable(name = "id") Integer selectedProduct) {
@@ -136,6 +129,13 @@ public class RestService {
     //
     //UPDATE
     //
+
+    @RequestMapping(value = "/setconfig", method = RequestMethod.PUT)
+    public ResponseEntity<?> setConfig(@RequestBody Config config) {
+        config.setKey("pathFormat");
+        return new ResponseEntity<>(service.setConfig(config), HttpStatus.OK);
+    }
+
     @RequestMapping(value = "/setadmin/{id}", method = RequestMethod.PUT)
     public ResponseEntity<?> setAdmin(@RequestBody Admin admin, @PathVariable Integer id) {
 
@@ -148,36 +148,11 @@ public class RestService {
                 //hash admin.setPassword( HASH(admin.getPassword))
                 admin.setPassword("HASH:" + admin.getPassword());
             }
-
             admin.setId(id);
             return new ResponseEntity<>(service.setAdmin(admin), HttpStatus.OK);
         }
-
-        return new ResponseEntity<>(
-                "Ce nom d'utilisateur existe déjà", HttpStatus.BAD_REQUEST);
+        return new ResponseEntity<>("Ce nom d'utilisateur existe deja", HttpStatus.BAD_REQUEST);
     }
-
-   /* @RequestMapping(value = "/setclient/{id}", method = RequestMethod.PUT)
-    public User setClient(@RequestBody Client client, @PathVariable Integer id *//*, String selectedSubProduct[] *//*) {
-
-        String selectedSubProduct[] = new String[3];
-        selectedSubProduct[0] = "1";
-        selectedSubProduct[1] = "2";
-        selectedSubProduct[2] = "3";
-
-        client.setId(id);
-        User modifiedClient = service.setClient(client);
-
-        SubProduct subProduct;
-
-        for (String aSelectedSubProduct : selectedSubProduct) {
-            subProduct = service.getSubProductById(Integer.parseInt(aSelectedSubProduct));
-            service.mergeClientSubProduct((Client) modifiedClient, subProduct);
-        }
-
-        return modifiedClient;
-    }*/
-
 
     @RequestMapping(value = "/setclient/{id}", method = RequestMethod.PUT)
     public ResponseEntity<?> setClient(@RequestBody String jsonStr, @PathVariable Integer id) {
@@ -214,13 +189,9 @@ public class RestService {
                 service.mergeClientSubProduct(clientForm, subProduct);
             }
             return new ResponseEntity<>(service.setClient(clientForm), HttpStatus.OK);
-
         }
-        return new ResponseEntity<>(
-                "Ce nom d'utilisateur existe déjà", HttpStatus.BAD_REQUEST);
-
+        return new ResponseEntity<>("Ce nom d'utilisateur existe deja", HttpStatus.BAD_REQUEST);
     }
-
 
     @RequestMapping(value = "/setproduct/{id}", method = RequestMethod.PUT)
     public Product newProduct(@RequestBody Product product, @PathVariable Integer id) {
@@ -253,5 +224,4 @@ public class RestService {
     public void deleteSubProduct(@PathVariable Integer id) {
         service.deleteSubProduct(id);
     }
-
 }
