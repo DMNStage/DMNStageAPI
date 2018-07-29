@@ -224,4 +224,16 @@ public class RestService {
     public void deleteSubProduct(@PathVariable Integer id) {
         service.deleteSubProduct(id);
     }
+
+    //
+    // service.setConfig(new Config("pathFormat", "http://img.dmnstage.com/teledetection/#product#/#subProduct#/#year#-#month#-#day#/#hour##minute#.#ext#"));
+    //
+    /*@RequestMapping(value = "/getimagestime/{id}", method = RequestMethod.DELETE)
+    public ResponseEntity<?> getImagesTime(@PathVariable Integer id) {
+        SubProduct subProduct = service.getSubProductById(id);
+        Config pathFormat = service.getConfigByKey("pathFormat");
+        String url = pathFormat.getValue();
+
+        service.deleteUser(id);
+    }*/
 }

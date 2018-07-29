@@ -1,4 +1,5 @@
-
+- Api(subProduct) (return list les date dial les image)
+- Api(subProduct, datetime) (return url/msg err)
 - Spring sec with Rest
     -
     -
@@ -11,3 +12,41 @@
     -
     -
     -
+----------------------------------------------
+Sat stand +00:15
+-------------
+hrv/ 	0500.jpg    1745.jpg
+ir/  	0000.jpg    2345.jpg
+nbir/	0000.jpg    2345.jpg
+vs/  	0500.jpg	1745.jpg
+wv/ 	0000.jpg    2345.jpg
+
+sat dev	+00:15
+-------------
+bispectrale				0600.jpg	1800.jpg
+brouillard_nuagesbas	0000.jpg    2345.jpg
+convstrm				0600.jpg	1800.jpg
+natural/				0600.jpg	1800.jpg
+poussiere/				0000.jpg	2330.jpg
+pouvoir_precipitant/	0000.jpg    2345.jpg
+rgbneige/				0600.jpg	1800.jpg
+snrt/					0730.png	1745.png
+visiomet/				0000.jpg	2330.jpg
+volcan/					0000.jpg	2330.jpg
+
+radar stand +00:10
+--------------
+agadir250/		0000.jpg    2350.jpg
+casa250/		0000.jpg    2350.jpg
+debdou250/		0000.jpg    2350.jpg
+fes250/			0000.jpg    2350.jpg
+mosaic/			0000.jpg    2350.jpg
+mosaicmosaic/	0000.jpg    2350.jpg
+
+Radar-Developpe +00:10
+----------------
+/** 			0000.jpg    2350.jpg
+
+Foudre-Standard +00:10
+----------------
+/** 			0000.gif	2350.gif

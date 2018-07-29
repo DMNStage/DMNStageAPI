@@ -30,7 +30,8 @@ public class DmnStageApiApplication implements CommandLineRunner {
     @Override
     @Transactional
     public void run(String... args) {
-        service.setConfig(new Config("pathFormat", "api.dmnstage.com/img/#Product#-#Subproduct#-#Year#-#Month#-#Day#.jpg"));
+        //service.setConfig(new Config("pathFormat", "api.dmnstage.com/img/#Product#-#Subproduct#-#Year#-#Month#-#Day#.jpg"));
+        service.setConfig(new Config("pathFormat", "http://img.dmnstage.com/teledetection/#product#/#subProduct#/#year#-#month#-#day#/#hour##minute#.#ext#"));
 
         User admin1 = service.newUser(new Admin("AbdellahASKI", "654321", "Abdellah@aski.me", "+212707970909", "Abdellah", "ASKI"));
         User admin2 = service.newUser(new Admin("kumohira", "654321", "youssef@naitsaid.me", "+21200000000", "Youssef", "NAIT SAID"));
@@ -43,6 +44,7 @@ public class DmnStageApiApplication implements CommandLineRunner {
 
         // Category teledetection = service.newCategory(new Category("Teledetection", "extranet.marocmeteo.ma/samba/detections/#Product#/#SUBProduct#/#Month##Day#/#SUBProduct#_#Year##Month##Day##Hour##Minute#.jpg"));
         //"http://extranet.marocmeteo.ma/samba/detections/"
+        //"http://images.dmnstage.ccom/teledetection/#SUBProduct#/#Year##Month##Day#/#Hour##Minute#.jpg"
 
         Product satelliteStandard = service.newProduct(new Product("Satellite Standard", "sats"));
         Product satelliteDeveloppe = service.newProduct(new Product("Satellite Developpe", "rgbs"));
