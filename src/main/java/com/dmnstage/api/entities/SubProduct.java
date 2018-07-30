@@ -17,6 +17,14 @@ public class SubProduct implements Serializable {
 
     private String pathName;
 
+    private String startTime;
+
+    private String endTime;
+
+    private int step;
+
+    private String ext;
+
     //with Client
     @ManyToMany(mappedBy = "subProducts", fetch = FetchType.LAZY)
     @JsonIgnore
@@ -31,9 +39,13 @@ public class SubProduct implements Serializable {
     public SubProduct() {
     }
 
-    public SubProduct(String name, String pathName) {
+    public SubProduct(String name, String pathName, String startTime, String endTime, int step, String ext) {
         this.name = name;
         this.pathName = pathName;
+        this.startTime = startTime;
+        this.endTime = endTime;
+        this.step = step;
+        this.ext = ext;
     }
 
     public int getId() {
@@ -60,6 +72,38 @@ public class SubProduct implements Serializable {
         this.pathName = pathName;
     }
 
+    public String getStartTime() {
+        return startTime;
+    }
+
+    public void setStartTime(String startTime) {
+        this.startTime = startTime;
+    }
+
+    public String getEndTime() {
+        return endTime;
+    }
+
+    public void setEndTime(String endTime) {
+        this.endTime = endTime;
+    }
+
+    public int getStep() {
+        return step;
+    }
+
+    public void setStep(int step) {
+        this.step = step;
+    }
+
+    public String getExt() {
+        return ext;
+    }
+
+    public void setExt(String ext) {
+        this.ext = ext;
+    }
+
     public void addClient(Client client) {
         clients.add(client);
     }
@@ -76,7 +120,7 @@ public class SubProduct implements Serializable {
         return product;
     }
 
-    public void setProduct(Product product) {
+    void setProduct(Product product) {
         this.product = product;
     }
 
@@ -86,7 +130,10 @@ public class SubProduct implements Serializable {
                 "id=" + id +
                 ", name='" + name + '\'' +
                 ", pathName='" + pathName + '\'' +
-                //", product=" + product +
+                ", startTime='" + startTime + '\'' +
+                ", endTime='" + endTime + '\'' +
+                ", step=" + step +
+                ", ext='" + ext + '\'' +
                 '}';
     }
 }

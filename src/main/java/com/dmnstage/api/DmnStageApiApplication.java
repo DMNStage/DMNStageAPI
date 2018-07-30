@@ -32,6 +32,7 @@ public class DmnStageApiApplication implements CommandLineRunner {
     public void run(String... args) {
         //service.setConfig(new Config("pathFormat", "api.dmnstage.com/img/#Product#-#Subproduct#-#Year#-#Month#-#Day#.jpg"));
         service.setConfig(new Config("pathFormat", "http://img.dmnstage.com/teledetection/#product#/#subProduct#/#year#-#month#-#day#/#hour##minute#.#ext#"));
+        //service.setConfig(new Config("pathFormat", "extranet.marocmeteo.ma/samba/detections/#product#/#subProduct#/#month##day#/#subProduct#_#year##month##day##hour##minute#.#ext#"));
 
         User admin1 = service.newUser(new Admin("AbdellahASKI", "654321", "Abdellah@aski.me", "+212707970909", "Abdellah", "ASKI"));
         User admin2 = service.newUser(new Admin("kumohira", "654321", "youssef@naitsaid.me", "+21200000000", "Youssef", "NAIT SAID"));
@@ -52,11 +53,11 @@ public class DmnStageApiApplication implements CommandLineRunner {
         Product radarDeveloppe = service.newProduct(new Product("Radar Developpe", "srmats"));
         Product foudreStandard = service.newProduct(new Product("Foudre Standard", "foudres"));
 
-        SubProduct canalIR = service.newSubProduct(new SubProduct("Canal IR", "ir")); //image name : nothing
-        SubProduct canalVS = service.newSubProduct(new SubProduct("Canal VS", "vs")); //image name : nothing
-        SubProduct canalWV = service.newSubProduct(new SubProduct("Canal WV", "wv")); //image name : nothing
-        SubProduct canalIRNB = service.newSubProduct(new SubProduct("Canal IR NB", "nbir")); //image name : nothing
-        SubProduct canalHRV = service.newSubProduct(new SubProduct("Canal HRV", "hrv")); //image name : nothing
+        SubProduct canalIR = service.newSubProduct(new SubProduct("Canal IR", "ir", "0000", "2345", 15, "jpg")); //image name : nothing
+        SubProduct canalVS = service.newSubProduct(new SubProduct("Canal VS", "vs", "0500", "1745", 15, "jpg")); //image name : nothing
+        SubProduct canalWV = service.newSubProduct(new SubProduct("Canal WV", "wv", "0000", "2345", 15, "jpg")); //image name : nothing
+        SubProduct canalIRNB = service.newSubProduct(new SubProduct("Canal IR NB", "nbir", "0000", "2345", 15, "jpg")); //image name : nothing
+        SubProduct canalHRV = service.newSubProduct(new SubProduct("Canal HRV", "hrv", "0500", "1745", 15, "jpg")); //image name : nothing
 
         service.addSubProductToProduct(canalIR, satelliteStandard);
         service.addSubProductToProduct(canalVS, satelliteStandard);
@@ -64,11 +65,11 @@ public class DmnStageApiApplication implements CommandLineRunner {
         service.addSubProductToProduct(canalIRNB, satelliteStandard);
         service.addSubProductToProduct(canalHRV, satelliteStandard);
 
-        SubProduct pouvoirPrecipitant = service.newSubProduct(new SubProduct("Pouvoir Precipitant", "pouvoir_precipitant")); //pvr_prec
-        SubProduct bispectrale = service.newSubProduct(new SubProduct("Bispectrale", "bispectrale")); //bispectrale
-        SubProduct couleurNaturelle = service.newSubProduct(new SubProduct("Couleur Naturelle", "natural")); //natural
-        SubProduct brouillardNuagesBas = service.newSubProduct(new SubProduct("Brouillard Nuages Bas", "brouillard_nuagesbas")); //brd_nbas
-        SubProduct convectionOrage = service.newSubProduct(new SubProduct("Convection Orage", "convstrm")); //convstrm
+        SubProduct pouvoirPrecipitant = service.newSubProduct(new SubProduct("Pouvoir Precipitant", "pouvoir_precipitant", "0000", "2345", 15, "jpg")); //pvr_prec
+        SubProduct bispectrale = service.newSubProduct(new SubProduct("Bispectrale", "bispectrale", "0600", "1800", 15, "jpg")); //bispectrale
+        SubProduct couleurNaturelle = service.newSubProduct(new SubProduct("Couleur Naturelle", "natural", "0600", "1800", 15, "jpg")); //natural
+        SubProduct brouillardNuagesBas = service.newSubProduct(new SubProduct("Brouillard Nuages Bas", "brouillard_nuagesbas", "0000", "2345", 15, "jpg")); //brd_nbas
+        SubProduct convectionOrage = service.newSubProduct(new SubProduct("Convection Orage", "convstrm", "0600", "1800", 15, "jpg")); //convstrm
 
         service.addSubProductToProduct(pouvoirPrecipitant, satelliteDeveloppe);
         service.addSubProductToProduct(bispectrale, satelliteDeveloppe);
@@ -76,12 +77,12 @@ public class DmnStageApiApplication implements CommandLineRunner {
         service.addSubProductToProduct(brouillardNuagesBas, satelliteDeveloppe);
         service.addSubProductToProduct(convectionOrage, satelliteDeveloppe);
 
-        SubProduct mosaicA = service.newSubProduct(new SubProduct("Mosaic A", "mosaic")); //mosaic
-        SubProduct mosaicB = service.newSubProduct(new SubProduct("Mosaic B", "mosaicmosaic")); //mosaicmosaic
-        SubProduct agadir250 = service.newSubProduct(new SubProduct("Agadir 250", "agadir250")); //agadir250
-        SubProduct casa250 = service.newSubProduct(new SubProduct("Casa 250", "casa250")); //casa250
-        SubProduct debdou250 = service.newSubProduct(new SubProduct("Debdou 250", "debdou250")); //debdou250
-        SubProduct fes250 = service.newSubProduct(new SubProduct("Fes 250", "fes250")); //fes250
+        SubProduct mosaicA = service.newSubProduct(new SubProduct("Mosaic A", "mosaic", "0000", "2350", 10, "jpg")); //mosaic
+        SubProduct mosaicB = service.newSubProduct(new SubProduct("Mosaic B", "mosaicmosaic", "0000", "2350", 10, "jpg")); //mosaicmosaic
+        SubProduct agadir250 = service.newSubProduct(new SubProduct("Agadir 250", "agadir250", "0000", "2350", 10, "jpg")); //agadir250
+        SubProduct casa250 = service.newSubProduct(new SubProduct("Casa 250", "casa250", "0000", "2350", 10, "jpg")); //casa250
+        SubProduct debdou250 = service.newSubProduct(new SubProduct("Debdou 250", "debdou250", "0000", "2350", 10, "jpg")); //debdou250
+        SubProduct fes250 = service.newSubProduct(new SubProduct("Fes 250", "fes250", "0000", "2350", 10, "jpg")); //fes250
 
         service.addSubProductToProduct(mosaicA, radaStandard);
         service.addSubProductToProduct(mosaicB, radaStandard);
@@ -90,14 +91,14 @@ public class DmnStageApiApplication implements CommandLineRunner {
         service.addSubProductToProduct(debdou250, radaStandard);
         service.addSubProductToProduct(fes250, radaStandard);
 
-        SubProduct foudreMaroc = service.newSubProduct(new SubProduct("Foudre Maroc", "observation")); //foudre
-        SubProduct lydec = service.newSubProduct(new SubProduct("Lydec", "lydec")); //foudre_ldc
-        SubProduct jorfLasfer = service.newSubProduct(new SubProduct("Jorf Lasfer", "jorf_lasfer")); //jorf_lasfer
-        SubProduct bassinBouregreg = service.newSubProduct(new SubProduct("Bassin Bouregreg", "bassin_versant")); //bouregreg
-        SubProduct bassinLoukos = service.newSubProduct(new SubProduct("bassin Loukos", "bassin_versant")); //loukos
-        SubProduct bassinOumErrabiae = service.newSubProduct(new SubProduct("bassin Oum Errabiae", "bassin_versant")); //oumerrabiae
-        SubProduct bassinSebou = service.newSubProduct(new SubProduct("bassin Sebou", "bassin_versant")); //sebou
-        SubProduct bassinTensift = service.newSubProduct(new SubProduct("bassin Tensiftx", "bassin_versant")); //tensift
+        SubProduct foudreMaroc = service.newSubProduct(new SubProduct("Foudre Maroc", "observation", "0000", "2350", 10, "gif")); //foudre
+        SubProduct lydec = service.newSubProduct(new SubProduct("Lydec", "lydec", "0000", "2350", 10, "gif")); //foudre_ldc
+        SubProduct jorfLasfer = service.newSubProduct(new SubProduct("Jorf Lasfer", "jorf_lasfer", "0000", "2350", 10, "gif")); //jorf_lasfer
+        SubProduct bassinBouregreg = service.newSubProduct(new SubProduct("Bassin Bouregreg", "bassin_versant", "0000", "2350", 10, "gif")); //bouregreg
+        SubProduct bassinLoukos = service.newSubProduct(new SubProduct("bassin Loukos", "bassin_versant", "0000", "2350", 10, "gif")); //loukos
+        SubProduct bassinOumErrabiae = service.newSubProduct(new SubProduct("bassin Oum Errabiae", "bassin_versant", "0000", "2350", 10, "gif")); //oumerrabiae
+        SubProduct bassinSebou = service.newSubProduct(new SubProduct("bassin Sebou", "bassin_versant", "0000", "2350", 10, "gif")); //sebou
+        SubProduct bassinTensift = service.newSubProduct(new SubProduct("bassin Tensiftx", "bassin_versant", "0000", "2350", 10, "gif")); //tensift
 
         service.addSubProductToProduct(foudreMaroc, foudreStandard);
         service.addSubProductToProduct(lydec, foudreStandard);

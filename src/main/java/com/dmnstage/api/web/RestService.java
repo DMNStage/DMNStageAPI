@@ -9,6 +9,9 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.io.IOException;
+import java.net.HttpURLConnection;
+import java.net.URL;
 import java.util.List;
 
 @RestController
@@ -228,12 +231,67 @@ public class RestService {
     //
     // service.setConfig(new Config("pathFormat", "http://img.dmnstage.com/teledetection/#product#/#subProduct#/#year#-#month#-#day#/#hour##minute#.#ext#"));
     //
-    /*@RequestMapping(value = "/getimagestime/{id}", method = RequestMethod.DELETE)
+    @RequestMapping(value = "/getimagestime/{id}", method = RequestMethod.GET)
     public ResponseEntity<?> getImagesTime(@PathVariable Integer id) {
         SubProduct subProduct = service.getSubProductById(id);
-        Config pathFormat = service.getConfigByKey("pathFormat");
-        String url = pathFormat.getValue();
+        JSONObject obj = new JSONObject();
+        obj.accumulate("startTime", subProduct.getStartTime());
+        obj.accumulate("endTime", subProduct.getEndTime());
+        obj.accumulate("step", subProduct.getStep());
+        System.out.println(obj.toString());
+        return new ResponseEntity<>(obj.toString(), HttpStatus.OK);
+    }
 
-        service.deleteUser(id);
-    }*/
+    @RequestMapping(value = "/getimage/{id}", method = RequestMethod.GET)
+    public ResponseEntity<?> getImages(@PathVariable Integer id,
+                                       @RequestParam String year,
+                                       @RequestParam String month,
+                                       @RequestParam String day,
+                                       @RequestParam(required = false) String hour,
+                                       @RequestParam(required = false) String minute
+    ) {
+        SubProduct subProduct = service.getSubProductById(id);
+
+        String url = service.getConfigByKey("pathFormat").getValue();
+
+        System.out.println(hour != null);
+
+        if (hour != null && minute != null) {
+            url = url.replace("#product#", subProduct.getProduct().getPathName());
+            url = url.replace("#subProduct#", subProduct.getPathName());
+            url = url.replace("#year#", year);
+            url = url.replace("#month#", month);
+            url = url.replace("#day#", day);
+            url = url.replace("#hour#", hour);
+            url = url.replace("#minute#", minute);
+            url = url.replace("#ext#", subProduct.getExt());
+
+            /*
+              ma7ad dik img.dmnstage makaynach (z3ma ladkhalti liha maghadich itla3 lik site)
+              dima had lcode ghadi ital3 exception ldb
+             */
+            HttpURLConnection.setFollowRedirects(false);
+            HttpURLConnection con;
+            try {
+                con = (HttpURLConnection) new URL(url).openConnection();
+                con.setRequestMethod("HEAD");
+
+                System.out.println(con.getResponseCode());
+                System.out.println(con.getResponseCode() != HttpURLConnection.HTTP_OK);
+
+                //kantesti wach url kirj3 200 (HTTP_OK) z3ma khedam
+                if (con.getResponseCode() != HttpURLConnection.HTTP_OK)
+                    return new ResponseEntity<>("Error " + con.getResponseCode(), HttpStatus.valueOf(con.getResponseCode()));
+            } catch (IOException e) {
+                //e.printStackTrace();
+                return new ResponseEntity<>("IOException", HttpStatus.NOT_FOUND);
+            }
+            return new ResponseEntity<>(url, HttpStatus.OK);
+        } else {
+            //Traitement diyal bzf diyal les image
+            return new ResponseEntity<>(url, HttpStatus.OK);
+        }
+    }
+
+
 }
