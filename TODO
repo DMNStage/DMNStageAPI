@@ -1,5 +1,5 @@
-- Api(subProduct) (return list les date dial les image)
-- Api(subProduct, datetime) (return url/msg err)
+(done) - Api(subProduct) (return list les date dial les image)
+(done) - Api(subProduct, datetime) (return url/msg err)
 - Spring sec with Rest
     -
     -

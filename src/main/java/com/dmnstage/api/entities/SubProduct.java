@@ -4,6 +4,7 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import javax.persistence.*;
 import java.io.Serializable;
+import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -17,9 +18,9 @@ public class SubProduct implements Serializable {
 
     private String pathName;
 
-    private String startTime;
+    private LocalTime startTime;
 
-    private String endTime;
+    private LocalTime endTime;
 
     private int step;
 
@@ -39,7 +40,7 @@ public class SubProduct implements Serializable {
     public SubProduct() {
     }
 
-    public SubProduct(String name, String pathName, String startTime, String endTime, int step, String ext) {
+    public SubProduct(String name, String pathName, LocalTime startTime, LocalTime endTime, int step, String ext) {
         this.name = name;
         this.pathName = pathName;
         this.startTime = startTime;
@@ -72,19 +73,19 @@ public class SubProduct implements Serializable {
         this.pathName = pathName;
     }
 
-    public String getStartTime() {
+    public LocalTime getStartTime() {
         return startTime;
     }
 
-    public void setStartTime(String startTime) {
+    public void setStartTime(LocalTime startTime) {
         this.startTime = startTime;
     }
 
-    public String getEndTime() {
+    public LocalTime getEndTime() {
         return endTime;
     }
 
-    public void setEndTime(String endTime) {
+    public void setEndTime(LocalTime endTime) {
         this.endTime = endTime;
     }
 

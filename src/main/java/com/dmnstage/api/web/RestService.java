@@ -12,7 +12,12 @@ import org.springframework.web.bind.annotation.*;
 import java.io.IOException;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.time.LocalTime;
 import java.util.List;
+
+//import javax.json.JsonObject;
+//import javax.json.JsonArray;
+
 
 @RestController
 public class RestService {
@@ -231,18 +236,32 @@ public class RestService {
     //
     // service.setConfig(new Config("pathFormat", "http://img.dmnstage.com/teledetection/#product#/#subProduct#/#year#-#month#-#day#/#hour##minute#.#ext#"));
     //
-    @RequestMapping(value = "/getimagestime/{id}", method = RequestMethod.GET)
+    @RequestMapping(value = "/getimagestime/{id}", method = RequestMethod.GET, produces = "application/json")
     public ResponseEntity<?> getImagesTime(@PathVariable Integer id) {
         SubProduct subProduct = service.getSubProductById(id);
         JSONObject obj = new JSONObject();
-        obj.accumulate("startTime", subProduct.getStartTime());
-        obj.accumulate("endTime", subProduct.getEndTime());
-        obj.accumulate("step", subProduct.getStep());
+        obj.put("startTime", subProduct.getStartTime());
+        obj.put("endTime", subProduct.getEndTime());
+        obj.put("step", subProduct.getStep());
         System.out.println(obj.toString());
         return new ResponseEntity<>(obj.toString(), HttpStatus.OK);
     }
 
-    @RequestMapping(value = "/getimage/{id}", method = RequestMethod.GET)
+    @RequestMapping(value = "/getimagestime2/{id}", method = RequestMethod.GET, produces = "application/json")
+    public ResponseEntity<?> getImagesTime2(@PathVariable Integer id) {
+        SubProduct subProduct = service.getSubProductById(id);
+        JSONObject jsonObject = new JSONObject();
+        LocalTime iteratorTime = subProduct.getStartTime();
+        do {
+            jsonObject.accumulate("imageTime", iteratorTime);
+            iteratorTime = iteratorTime.plusMinutes(subProduct.getStep());
+        }
+        while (!iteratorTime.equals(subProduct.getEndTime().plusMinutes(subProduct.getStep())));
+
+        return new ResponseEntity<>(jsonObject.toString(), HttpStatus.OK);
+    }
+
+    @RequestMapping(value = "/getimage/{id}", method = RequestMethod.GET, produces = "application/json")
     public ResponseEntity<?> getImages(@PathVariable Integer id,
                                        @RequestParam String year,
                                        @RequestParam String month,
@@ -251,47 +270,63 @@ public class RestService {
                                        @RequestParam(required = false) String minute
     ) {
         SubProduct subProduct = service.getSubProductById(id);
-
         String url = service.getConfigByKey("pathFormat").getValue();
 
-        System.out.println(hour != null);
+        url = url.replace("#product#", subProduct.getProduct().getPathName());
+        url = url.replace("#subProduct#", subProduct.getPathName());
+        url = url.replace("#year#", year);
+        url = url.replace("#month#", month);
+        url = url.replace("#day#", day);
+        url = url.replace("#ext#", subProduct.getExt());
+
+        JSONObject jsonObject = new JSONObject();
+        jsonObject.put("subProductId", subProduct.getId());
+        jsonObject.put("subProductName", subProduct.getName());
 
         if (hour != null && minute != null) {
-            url = url.replace("#product#", subProduct.getProduct().getPathName());
-            url = url.replace("#subProduct#", subProduct.getPathName());
-            url = url.replace("#year#", year);
-            url = url.replace("#month#", month);
-            url = url.replace("#day#", day);
+
             url = url.replace("#hour#", hour);
             url = url.replace("#minute#", minute);
-            url = url.replace("#ext#", subProduct.getExt());
 
-            /*
-              ma7ad dik img.dmnstage makaynach (z3ma ladkhalti liha maghadich itla3 lik site)
-              dima had lcode ghadi ital3 exception ldb
-             */
+            jsonObject.put("img", url);
+
             HttpURLConnection.setFollowRedirects(false);
-            HttpURLConnection con;
             try {
-                con = (HttpURLConnection) new URL(url).openConnection();
-                con.setRequestMethod("HEAD");
+                HttpURLConnection httpURLConnection = (HttpURLConnection) new URL(url).openConnection();
+                httpURLConnection.setRequestMethod("HEAD");
 
-                System.out.println(con.getResponseCode());
-                System.out.println(con.getResponseCode() != HttpURLConnection.HTTP_OK);
-
-                //kantesti wach url kirj3 200 (HTTP_OK) z3ma khedam
-                if (con.getResponseCode() != HttpURLConnection.HTTP_OK)
-                    return new ResponseEntity<>("Error " + con.getResponseCode(), HttpStatus.valueOf(con.getResponseCode()));
+                jsonObject.put("httpStatus", httpURLConnection.getResponseCode());
             } catch (IOException e) {
                 //e.printStackTrace();
                 return new ResponseEntity<>("IOException", HttpStatus.NOT_FOUND);
             }
-            return new ResponseEntity<>(url, HttpStatus.OK);
+
+            return new ResponseEntity<>(jsonObject.toString(), HttpStatus.OK);
         } else {
-            //Traitement diyal bzf diyal les image
-            return new ResponseEntity<>(url, HttpStatus.OK);
+
+            LocalTime iteratorTime = subProduct.getStartTime();
+            String tempHour, tempMinute;
+
+            do {
+                if (iteratorTime.getHour() < 10)
+                    tempHour = "0" + String.valueOf(iteratorTime.getHour());
+                else
+                    tempHour = String.valueOf(iteratorTime.getHour());
+
+                if (iteratorTime.getMinute() < 10)
+                    tempMinute = "0" + String.valueOf(iteratorTime.getMinute());
+                else
+                    tempMinute = String.valueOf(iteratorTime.getMinute());
+
+                url = url.replace("#hour##minute#", tempHour + tempMinute);
+                jsonObject.accumulate("img", url);
+                url = url.replace(tempHour + tempMinute, "#hour##minute#");
+
+                iteratorTime = iteratorTime.plusMinutes(subProduct.getStep());
+            }
+            while (!iteratorTime.equals(subProduct.getEndTime().plusMinutes(subProduct.getStep())));
+
+            return new ResponseEntity<>(jsonObject.toString(), HttpStatus.OK);
         }
     }
-
-
 }
