@@ -2,6 +2,8 @@ package com.dmnstage.api.entities;
 
 import javax.persistence.*;
 import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity
 @Inheritance(strategy = InheritanceType.SINGLE_TABLE)
@@ -11,6 +13,7 @@ public class User implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
+
     @Column(unique = true)
     private String username;
     
@@ -20,11 +23,21 @@ public class User implements Serializable {
 
     private String phone;
 
-    User(String username, String password, String email, String phone) {
+    private int active;
+
+    @ManyToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+    @JoinTable(name = "user_role",
+            joinColumns = @JoinColumn(name = "user_id"),
+            inverseJoinColumns = @JoinColumn(name = "role_id")
+    )
+    private List<Role> roles = new ArrayList<>();
+
+    User(String username, String password, String email, String phone, int active) {
         this.username = username;
         this.password = password;
         this.email = email;
         this.phone = phone;
+        this.active = active;
     }
 
     User() {
@@ -70,12 +83,33 @@ public class User implements Serializable {
         this.phone = phone;
     }
 
+    public int getActive() {
+        return active;
+    }
+
+    public void setActive(int active) {
+        this.active = active;
+    }
+
+    public List<Role> getRoles() {
+        return roles;
+    }
+
+    public void setRoles(List<Role> roles) {
+        this.roles = roles;
+    }
+
+    public void addRole(Role role) {
+        roles.add(role);
+    }
+
     @Override
     public String toString() {
         return "id=" + id +
                 ", username='" + username + '\'' +
                 ", password='" + password + '\'' +
                 ", email='" + email + '\'' +
-                ", phone='" + phone + '\'';
+                ", phone='" + phone + '\'' +
+                ", active='" + active + '\'';
     }
 }

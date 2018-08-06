@@ -36,14 +36,23 @@ public class DmnStageApiApplication implements CommandLineRunner {
         service.setConfig(new Config("pathFormat", "http://img.dmnstage.com/teledetection/#product#/#subProduct#/#year#-#month#-#day#/#hour##minute#.#ext#"));
         //service.setConfig(new Config("pathFormat", "extranet.marocmeteo.ma/samba/detections/#product#/#subProduct#/#month##day#/#subProduct#_#year##month##day##hour##minute#.#ext#"));
 
-        User admin1 = service.newUser(new Admin("AbdellahASKI", "654321", "Abdellah@aski.me", "+212707970909", "Abdellah", "ASKI"));
-        User admin2 = service.newUser(new Admin("kumohira", "654321", "youssef@naitsaid.me", "+21200000000", "Youssef", "NAIT SAID"));
+        Role clientRole = service.newRole(new Role("client"));
+        Role adminRole = service.newRole(new Role("admin"));
+
+        User admin1 = service.newUser(new Admin("AbdellahASKI", "654321", "Abdellah@aski.me", "+212707970909", 1, "Abdellah", "ASKI"));
+        User admin2 = service.newUser(new Admin("kumohira", "654321", "youssef@naitsaid.me", "+21200000000", 1, "Youssef", "NAIT SAID"));
+
+        service.mergeUsersRole(admin1, adminRole);
+        service.mergeUsersRole(admin2, adminRole);
 
         //User U = service.getAdminById(1);
         //System.out.println(new BCryptPasswordEncoder().matches("654321", U.getPassword()));
 
-        User client1 = service.newUser(new Client("client1", "654321", "client1@client1.com", "+21200000000", "Client1"));
-        User client2 = service.newUser(new Client("client2", "654321", "client2@client2.com", "+21200000000", "Client2"));
+        User client1 = service.newUser(new Client("client1", "654321", "client1@client1.com", "+21200000000", 1, "Client1"));
+        User client2 = service.newUser(new Client("client2", "654321", "client2@client2.com", "+21200000000", 1, "Client2"));
+
+        service.mergeUsersRole(client1, clientRole);
+        service.mergeUsersRole(client2, clientRole);
 
         // Category teledetection = service.newCategory(new Category("Teledetection", "extranet.marocmeteo.ma/samba/detections/#Product#/#SUBProduct#/#Month##Day#/#SUBProduct#_#Year##Month##Day##Hour##Minute#.jpg"));
         //"http://extranet.marocmeteo.ma/samba/detections/"

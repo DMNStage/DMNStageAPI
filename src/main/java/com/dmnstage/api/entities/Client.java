@@ -23,8 +23,8 @@ public class Client extends User implements Serializable {
     public Client() {
     }
 
-    public Client(String username, String password, String email, String phone, String organizationName) {
-        super(username, password, email, phone);
+    public Client(String username, String password, String email, String phone, int active, String organizationName) {
+        super(username, password, email, phone, active);
         this.organizationName = organizationName;
     }
 

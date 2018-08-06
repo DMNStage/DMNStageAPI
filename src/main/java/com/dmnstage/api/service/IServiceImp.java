@@ -1,10 +1,7 @@
 package com.dmnstage.api.service;
 
 import com.dmnstage.api.entities.*;
-import com.dmnstage.api.repositories.ConfigRepository;
-import com.dmnstage.api.repositories.ProductRepository;
-import com.dmnstage.api.repositories.SubProductRepository;
-import com.dmnstage.api.repositories.UserRepository;
+import com.dmnstage.api.repositories.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -20,13 +17,18 @@ public class IServiceImp implements IService {
     private final ProductRepository productRepository;
     private final SubProductRepository subProductRepository;
     private final ConfigRepository configRepository;
+    private final RoleRepository roleRepository;
+
 
     @Autowired
-    public IServiceImp(UserRepository userRepository, ProductRepository productRepository, SubProductRepository subProductRepository, ConfigRepository configRepository) {
+    public IServiceImp(UserRepository userRepository, ProductRepository productRepository,
+                       SubProductRepository subProductRepository, ConfigRepository configRepository,
+                       RoleRepository roleRepository) {
         this.userRepository = userRepository;
         this.productRepository = productRepository;
         this.subProductRepository = subProductRepository;
         this.configRepository = configRepository;
+        this.roleRepository = roleRepository;
     }
 
     //Config
@@ -45,18 +47,23 @@ public class IServiceImp implements IService {
     public void addSubProductToProduct(SubProduct subProduct, Product product) {
         product.addSubProduct(subProduct);
     }
-/*
-    @Override
-    public void addProductToCategory(Product Product, Category category) {
-        category.addProduct(Product);
-    }
 
     @Override
-    public void mergeClientCategory(Client client, Category category) {
-        category.addClient(client);
-        client.addCategory(category);
+    public void mergeUsersRole(User user, Role role) { // Many To Many (Bi)
+        role.addUser(user);
+        user.addRole(role);
     }
-    */
+
+//    @Override
+//    public void addProductToCategory(Product Product, Category category) {
+//        category.addProduct(Product);
+//    }
+//
+//    @Override
+//    public void mergeClientCategory(Client client, Category category) {
+//        category.addClient(client);
+//        client.addCategory(category);
+//    }
 
     @Override
     public void mergeClientSubProduct(Client client, SubProduct subProduct) {
@@ -111,7 +118,13 @@ public class IServiceImp implements IService {
 
     @Override
     public void deleteUser(int id) {
-        userRepository.deleteById(id);
+        userRepository.delete(id);
+    }
+
+    //Role
+    @Override
+    public Role newRole(Role role) {
+        return roleRepository.save(role);
     }
 
     //Product
@@ -137,7 +150,7 @@ public class IServiceImp implements IService {
 
     @Override
     public void deleteProduct(int id) {
-        productRepository.deleteById(id);
+        productRepository.delete(id);
     }
 
     //SubProduct
@@ -163,7 +176,7 @@ public class IServiceImp implements IService {
 
     @Override
     public void deleteSubProduct(int id) {
-        subProductRepository.deleteById(id);
+        subProductRepository.delete(id);
     }
 
 }

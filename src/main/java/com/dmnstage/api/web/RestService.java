@@ -7,6 +7,7 @@ import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.io.IOException;
@@ -32,36 +33,43 @@ public class RestService {
     //
     //SELLECT
     //
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
     @RequestMapping(value = "/getuser/{id}", method = RequestMethod.GET)
     public User getUser(@PathVariable Integer id) {
         return service.getUserById(id);
     }
 
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
     @RequestMapping(value = "/getadmins", method = RequestMethod.GET)
     public List<Admin> getAdmins() {
         return service.getAllAdmins();
     }
 
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
     @RequestMapping(value = "/getclients", method = RequestMethod.GET)
     public List<Client> getClients() {
         return service.getAllClients();
     }
 
+    @PreAuthorize("hasRole('ROLE_ADMIN') or hasRole('ROLE_CLIENT')")
     @RequestMapping(value = "/getproduct/{id}", method = RequestMethod.GET)
     public Product getProduct(@PathVariable Integer id) {
         return service.getProductById(id);
     }
 
+    @PreAuthorize("hasRole('ROLE_ADMIN') or hasRole('ROLE_CLIENT')")
     @RequestMapping(value = "/getproducts", method = RequestMethod.GET)
     public List<Product> getProducts() {
         return service.getAllProducts();
     }
 
+    @PreAuthorize("hasRole('ROLE_ADMIN') or hasRole('ROLE_CLIENT')")
     @RequestMapping(value = "/getsubproduct/{id}", method = RequestMethod.GET)
     public SubProduct getSubProduct(@PathVariable Integer id) {
         return service.getSubProductById(id);
     }
 
+    @PreAuthorize("hasRole('ROLE_ADMIN') or hasRole('ROLE_CLIENT')")
     @RequestMapping(value = "/getsubproducts", method = RequestMethod.GET)
     public List<SubProduct> getSubProducts() {
         return service.getAllSubProducts();
@@ -70,7 +78,7 @@ public class RestService {
     //
     //CREATE
     //
-
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
     @RequestMapping(value = "/newadmin", method = RequestMethod.POST)
     public ResponseEntity<?> newAdmin(@RequestBody Admin admin) {
 
@@ -95,6 +103,7 @@ public class RestService {
      * ]
      * }
      */
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
     @RequestMapping(value = "/newclient", method = RequestMethod.POST)
     public ResponseEntity<?> newClient(@RequestBody String jsonStr) {
 
@@ -122,11 +131,13 @@ public class RestService {
         return new ResponseEntity<>("Ce nom d'utilisateur existe deja", HttpStatus.BAD_REQUEST);
     }
 
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
     @RequestMapping(value = "/newproduct", method = RequestMethod.POST)
     public Product newProduct(@RequestBody Product product) {
         return service.newProduct(product);
     }
 
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
     @RequestMapping(value = "/newsubproduct/{id}", method = RequestMethod.POST)
     public SubProduct newSubProduct(@RequestBody SubProduct subProduct, @PathVariable(name = "id") Integer selectedProduct) {
         Product product = service.getProductById(selectedProduct);
@@ -138,12 +149,14 @@ public class RestService {
     //UPDATE
     //
 
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
     @RequestMapping(value = "/setconfig", method = RequestMethod.PUT)
     public ResponseEntity<?> setConfig(@RequestBody Config config) {
         config.setKey("pathFormat");
         return new ResponseEntity<>(service.setConfig(config), HttpStatus.OK);
     }
 
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
     @RequestMapping(value = "/setadmin/{id}", method = RequestMethod.PUT)
     public ResponseEntity<?> setAdmin(@RequestBody Admin admin, @PathVariable Integer id) {
 
@@ -162,6 +175,7 @@ public class RestService {
         return new ResponseEntity<>("Ce nom d'utilisateur existe deja", HttpStatus.BAD_REQUEST);
     }
 
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
     @RequestMapping(value = "/setclient/{id}", method = RequestMethod.PUT)
     public ResponseEntity<?> setClient(@RequestBody String jsonStr, @PathVariable Integer id) {
 
@@ -201,12 +215,14 @@ public class RestService {
         return new ResponseEntity<>("Ce nom d'utilisateur existe deja", HttpStatus.BAD_REQUEST);
     }
 
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
     @RequestMapping(value = "/setproduct/{id}", method = RequestMethod.PUT)
     public Product newProduct(@RequestBody Product product, @PathVariable Integer id) {
         product.setId(id);
         return service.setProduct(product);
     }
 
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
     @RequestMapping(value = "/setsubproduct/{subProductId}/{productId}", method = RequestMethod.PUT)
     public SubProduct setSubProduct(@RequestBody SubProduct subProduct, @PathVariable Integer subProductId, @PathVariable Integer productId) {
         subProduct.setId(subProductId);
@@ -218,16 +234,19 @@ public class RestService {
     //
     //DELETE
     //
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
     @RequestMapping(value = "/deleteuser/{id}", method = RequestMethod.DELETE)
     public void deleteUser(@PathVariable Integer id) {
         service.deleteUser(id);
     }
 
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
     @RequestMapping(value = "/deleteproduct/{id}", method = RequestMethod.DELETE)
     public void deleteProduct(@PathVariable Integer id) {
         service.deleteProduct(id);
     }
 
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
     @RequestMapping(value = "/deletesubproduct/{id}", method = RequestMethod.DELETE)
     public void deleteSubProduct(@PathVariable Integer id) {
         service.deleteSubProduct(id);
@@ -236,6 +255,8 @@ public class RestService {
     //
     // service.setConfig(new Config("pathFormat", "http://img.dmnstage.com/teledetection/#product#/#subProduct#/#year#-#month#-#day#/#hour##minute#.#ext#"));
     //
+
+    @PreAuthorize("hasRole('ROLE_CLIENT')")
     @RequestMapping(value = "/getimagestime/{id}", method = RequestMethod.GET, produces = "application/json")
     public ResponseEntity<?> getImagesTime(@PathVariable Integer id) {
         SubProduct subProduct = service.getSubProductById(id);
@@ -247,6 +268,7 @@ public class RestService {
         return new ResponseEntity<>(obj.toString(), HttpStatus.OK);
     }
 
+    @PreAuthorize("hasRole('ROLE_CLIENT')")
     @RequestMapping(value = "/getimagestime2/{id}", method = RequestMethod.GET, produces = "application/json")
     public ResponseEntity<?> getImagesTime2(@PathVariable Integer id) {
         SubProduct subProduct = service.getSubProductById(id);
@@ -261,6 +283,7 @@ public class RestService {
         return new ResponseEntity<>(jsonObject.toString(), HttpStatus.OK);
     }
 
+    @PreAuthorize("hasRole('ROLE_CLIENT')")
     @RequestMapping(value = "/getimage/{id}", method = RequestMethod.GET, produces = "application/json")
     public ResponseEntity<?> getImages(@PathVariable Integer id,
                                        @RequestParam String year,

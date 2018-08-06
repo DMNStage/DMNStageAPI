@@ -15,6 +15,8 @@ public interface IService {
 
     void mergeClientSubProduct(Client client, SubProduct subProduct);
 
+    void mergeUsersRole(User user, Role role);
+
     //User
     User newUser(User user);
 
@@ -44,6 +46,9 @@ public interface IService {
     Product setProduct(Product product);
 
     void deleteProduct(int id);
+
+    //Role
+    Role newRole(Role role);
 
     //SubProduct
     SubProduct newSubProduct(SubProduct subProduct);

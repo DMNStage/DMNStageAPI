@@ -1,17 +1,8 @@
-(done) - Api(subProduct) (return list les date dial les image)
-(done) - Api(subProduct, datetime) (return url/msg err)
-- Spring sec with Rest
-    -
-    -
-    -
-- Thymleaf
-    -
-    -
-    -
-- Android
-    -
-    -
-    -
+(done)         - Api(subProduct) (return list les date dial les image)
+(done)         - Api(subProduct, datetime) (return url/msg err)
+(Mostly done)  - Spring sec with Rest
+(Not Yet)      - Thymleaf/Angular
+(Not Yet)      - Android
 ----------------------------------------------
 Sat stand +00:15
 -------------
