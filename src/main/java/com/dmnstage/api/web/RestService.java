@@ -8,6 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 
 import java.io.IOException;
@@ -25,9 +26,12 @@ public class RestService {
 
     private final IService service;
 
+    private final PasswordEncoder passwordEncoder;
+
     @Autowired
-    public RestService(IService service) {
+    public RestService(IService service, PasswordEncoder passwordEncoder) {
         this.service = service;
+        this.passwordEncoder = passwordEncoder;
     }
 
     //
@@ -166,8 +170,8 @@ public class RestService {
             if (admin.getPassword() == null || (admin.getPassword() != null && admin.getPassword().isEmpty()))
                 admin.setPassword(userInDB.getPassword());
             else {
-                //hash admin.setPassword( HASH(admin.getPassword))
-                admin.setPassword("HASH:" + admin.getPassword());
+                //Hashing
+                admin.setPassword(passwordEncoder.encode(admin.getPassword()));
             }
             admin.setId(id);
             return new ResponseEntity<>(service.setAdmin(admin), HttpStatus.OK);
@@ -198,8 +202,8 @@ public class RestService {
             if (clientForm.getPassword() == null || (clientForm.getPassword() != null && clientForm.getPassword().isEmpty()))
                 clientForm.setPassword(clientInDB.getPassword());//if it's empty, get the password from the DB
             else {
-                //hash clientForm.setPassword( HASH(clientForm.getPassword))
-                clientForm.setPassword("HASH:" + clientForm.getPassword());//If not hash the new password
+                //Hashing
+                clientForm.setPassword(passwordEncoder.encode(clientForm.getPassword()));//If not hash the new password
             }
             clientForm.setId(id);
 

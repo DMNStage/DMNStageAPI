@@ -8,6 +8,7 @@ import org.springframework.security.config.annotation.authentication.builders.Au
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.core.userdetails.UserDetailsService;
+import org.springframework.security.crypto.password.PasswordEncoder;
 
 //@Order(value = 100)
 //@EnableOAuth2Sso
@@ -17,11 +18,18 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
     //@Value("#{authenticationConfiguration.authenticationManager}")
     //@Qualifier(BeanIds.AUTHENTICATION_MANAGER)
-    @Autowired
-    public AuthenticationManager authenticationManager;
+    private final AuthenticationManager authenticationManager;
+
+    private final UserDetailsService customUserDetailsService;
+
+    private final PasswordEncoder passwordEncoder;
 
     @Autowired
-    private UserDetailsService customUserDetailsService;
+    public SecurityConfig(AuthenticationManager authenticationManager, UserDetailsService customUserDetailsService, PasswordEncoder passwordEncoder) {
+        this.authenticationManager = authenticationManager;
+        this.customUserDetailsService = customUserDetailsService;
+        this.passwordEncoder = passwordEncoder;
+    }
 
     @Override
     public void configure(HttpSecurity http) {
@@ -36,7 +44,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     @Override
     public void configure(AuthenticationManagerBuilder auth) throws Exception {
         auth.parentAuthenticationManager(authenticationManager)
-                .userDetailsService(customUserDetailsService);
+                .userDetailsService(customUserDetailsService).passwordEncoder(passwordEncoder);
 //        auth.userDetailsService(customUserDetailsService);
     }
 

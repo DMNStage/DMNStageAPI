@@ -3,12 +3,13 @@ package com.dmnstage.api.service;
 import com.dmnstage.api.entities.*;
 import com.dmnstage.api.repositories.*;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
-//import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+
 
 @Service
 @Transactional
@@ -19,16 +20,19 @@ public class IServiceImp implements IService {
     private final ConfigRepository configRepository;
     private final RoleRepository roleRepository;
 
+    private final PasswordEncoder passwordEncoder;
+
 
     @Autowired
     public IServiceImp(UserRepository userRepository, ProductRepository productRepository,
                        SubProductRepository subProductRepository, ConfigRepository configRepository,
-                       RoleRepository roleRepository) {
+                       RoleRepository roleRepository, PasswordEncoder passwordEncoder) {
         this.userRepository = userRepository;
         this.productRepository = productRepository;
         this.subProductRepository = subProductRepository;
         this.configRepository = configRepository;
         this.roleRepository = roleRepository;
+        this.passwordEncoder = passwordEncoder;
     }
 
     //Config
@@ -76,7 +80,7 @@ public class IServiceImp implements IService {
     public User newUser(User user) {
         user.setEmail(user.getEmail().toLowerCase());
         user.setUsername(user.getUsername().toLowerCase());
-        //user.setPassword(new BCryptPasswordEncoder().encode(user.getPassword()));
+        user.setPassword(passwordEncoder.encode(user.getPassword()));
         return userRepository.save(user);
     }
 
