@@ -16,11 +16,13 @@ public interface UserRepository extends JpaRepository<User, Integer> {
 
     User findById(int id);
 
+    List<User> findAll();
+
     @Query("select u from User u where TYPE(u) = 'Admin'")
-    List<Admin> findAllAdmins();
+    List<User> findAllAdmins(); //List<Admin> findAllAdmins();
 
     @Query("select u from User u where TYPE(u) = 'Client'")
-    List<Client> findAllClients();
+    List<User> findAllClients(); //List<Client> findAllClients();
 
     @Query("select u from User u where TYPE(u) = 'Admin' AND u.id= :id")
     User findAdminByID(@Param("id") int id);
