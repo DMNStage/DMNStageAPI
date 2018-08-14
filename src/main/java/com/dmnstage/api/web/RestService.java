@@ -1,5 +1,6 @@
 package com.dmnstage.api.web;
 
+import com.dmnstage.api.config.ITokenService;
 import com.dmnstage.api.entities.*;
 import com.dmnstage.api.service.IService;
 import org.json.JSONArray;
@@ -15,7 +16,9 @@ import java.io.IOException;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.time.LocalTime;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 //import javax.json.JsonObject;
 //import javax.json.JsonArray;
@@ -28,10 +31,97 @@ public class RestService {
 
     private final PasswordEncoder passwordEncoder;
 
+    private final ITokenService tokenService;
+
     @Autowired
-    public RestService(IService service, PasswordEncoder passwordEncoder) {
+    public RestService(IService service, PasswordEncoder passwordEncoder, ITokenService tokenService) {
         this.service = service;
         this.passwordEncoder = passwordEncoder;
+        this.tokenService = tokenService;
+    }
+
+    @RequestMapping(method = RequestMethod.GET, value = "/tokens")
+    public ResponseEntity<?> getTokens() {
+        return new ResponseEntity<>(tokenService.getAllTokensInfoByClientId("ClientId"), HttpStatus.OK);
+    }
+
+    @RequestMapping(method = RequestMethod.POST, value = "/tokeninfo", produces = "application/json; charset=utf-8")
+    public ResponseEntity<?> getTokenInfo(@RequestParam String by,
+                                          @RequestParam(required = false) String token,
+                                          @RequestParam(required = false, name = "clientid") String clientId,
+                                          @RequestParam(required = false) String username
+    ) {
+
+        if (by.equals("token") && !(token == null || token.trim().equals(""))) {
+            Map<String, String> map = tokenService.getTokenInfoByToken(token);
+
+            HttpStatus httpStatus = HttpStatus.BAD_REQUEST;
+            switch (map.get("result")) {
+                case "ok":
+                    httpStatus = HttpStatus.OK;
+                    break;
+                case "notfound":
+                    httpStatus = HttpStatus.NOT_FOUND;
+                    break;
+                case "expired":
+                    httpStatus = HttpStatus.GONE;
+                    break;
+            }
+            return new ResponseEntity<>(map, httpStatus); //Checking if the result is notfound or expired so we return 404 instead of 200
+        } else if (by.equals("username") && !(username == null || username.trim().equals("")) && !(clientId == null || clientId.trim().equals(""))) {
+            Map<String, String> map = tokenService.getTokenInfoByUsername(clientId, username);
+
+            HttpStatus httpStatus = HttpStatus.BAD_REQUEST;
+            switch (map.get("result")) {
+                case "ok":
+                    httpStatus = HttpStatus.OK;
+                    break;
+                case "notfound":
+                    httpStatus = HttpStatus.NOT_FOUND;
+                    break;
+                case "expired":
+                    httpStatus = HttpStatus.GONE;
+                    break;
+            }
+            return new ResponseEntity<>(map, httpStatus);
+        }
+
+        JSONObject jsonObject = new JSONObject();
+        jsonObject.put("result", "Invalid Params");
+        jsonObject.put("description", "The parameter 'by' should be either: =token with 'token' parameter, or =username with 'username' and 'clientid' parameters");
+        return new ResponseEntity<>(jsonObject.toString(), HttpStatus.BAD_REQUEST);
+    }
+
+    //if it get the username param it disconnect the user with that username if not it disconnect the connected user that sent that request
+    @RequestMapping(value = "/revoke_token", method = RequestMethod.GET, produces = "application/json; charset=utf-8")
+    public ResponseEntity<?> revokeToken(@RequestParam(required = false, name = "clientid") String clientId,
+                                         @RequestParam(required = false) String username) {
+        Map<String, String> map;
+        if ((clientId == null || clientId.trim().equals("")) && (username == null || username.trim().equals(""))) {
+            map = tokenService.revokeToken();
+
+        } else if (!(clientId == null || clientId.trim().equals("")) && !(username == null || username.trim().equals(""))) {
+            map = tokenService.revokeToken("clientId", username);
+        } else {
+            map = new HashMap<>();
+            map.put("result", "error");
+            map.put("description", "Invalid parameter (Either pass no parameters or pass the 'username' and 'clientid' parameters)");
+        }
+
+        HttpStatus httpStatus;
+
+        switch (map.get("result")) {
+            case "revoked":
+                httpStatus = HttpStatus.OK;
+                break;
+            case "notfound":
+                httpStatus = HttpStatus.NOT_FOUND;
+                break;
+            default:
+                httpStatus = HttpStatus.BAD_REQUEST;
+                break;
+        }
+        return new ResponseEntity<>(map, httpStatus);
     }
 
     //

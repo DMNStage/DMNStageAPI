@@ -2,6 +2,7 @@ package com.dmnstage.api.config;
 
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
@@ -18,15 +19,16 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
     //@Value("#{authenticationConfiguration.authenticationManager}")
     //@Qualifier(BeanIds.AUTHENTICATION_MANAGER)
-    private final AuthenticationManager authenticationManager;
+    //private final AuthenticationManager authenticationManager;
 
     private final UserDetailsService customUserDetailsService;
 
     private final PasswordEncoder passwordEncoder;
 
     @Autowired
-    public SecurityConfig(AuthenticationManager authenticationManager, UserDetailsService customUserDetailsService, PasswordEncoder passwordEncoder) {
-        this.authenticationManager = authenticationManager;
+    public SecurityConfig(//AuthenticationManager authenticationManager,
+                          UserDetailsService customUserDetailsService, PasswordEncoder passwordEncoder) {
+        //this.authenticationManager = authenticationManager;
         this.customUserDetailsService = customUserDetailsService;
         this.passwordEncoder = passwordEncoder;
     }
@@ -38,20 +40,19 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .antMatchers("/login", "/oauth/authorize")
         ;
     }
-
     //    @Autowired
 //    publlic void configureGlobal(AuthenticationManagerBuilder auth) throws Exception {
     @Override
     public void configure(AuthenticationManagerBuilder auth) throws Exception {
-        auth.parentAuthenticationManager(authenticationManager)
+        auth.parentAuthenticationManager(authenticationManagerBean())
                 .userDetailsService(customUserDetailsService).passwordEncoder(passwordEncoder);
 //        auth.userDetailsService(customUserDetailsService);
     }
 
-//    @Bean(name = BeanIds.AUTHENTICATION_MANAGER)
-//    @Override
-//    public AuthenticationManager authenticationManagerBean() throws Exception {
-//        return super.authenticationManagerBean();
-//        //return new AuthenticationManagerDelegator(authenticationBuilder);
-//    }
+
+    @Override
+    @Bean
+    public AuthenticationManager authenticationManagerBean() throws Exception {
+        return super.authenticationManagerBean();
+    }
 }
