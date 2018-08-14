@@ -1,7 +1,8 @@
 (done)         - Api(subProduct) (return list les date dial les image)
 (done)         - Api(subProduct, datetime) (return url/msg err)
-(Mostly done)  - Spring sec with Rest
-(Not Yet)      - Thymleaf/Angular
+(done)         - Spring sec with Rest
+(Not Yet)      - /users/3?type=admin (Line 144) illa 3tito admin mais 3tito id dial client
+(Not Yet)      - Angular
 (Not Yet)      - Android
 ----------------------------------------------
 Sat stand +00:15

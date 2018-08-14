@@ -101,12 +101,17 @@ public class IServiceImp implements IService {
     }
 
     @Override
-    public List<Admin> getAllAdmins() {
+    public List<User> getAllUsers(){
+        return userRepository.findAll();
+    }
+
+    @Override
+    public List<User> getAllAdmins() {
         return userRepository.findAllAdmins();
     }
 
     @Override
-    public List<Client> getAllClients() {
+    public List<User> getAllClients() {
         return userRepository.findAllClients();
     }
 
@@ -129,6 +134,11 @@ public class IServiceImp implements IService {
     @Override
     public Role newRole(Role role) {
         return roleRepository.save(role);
+    }
+
+    @Override
+    public Role getRoleByName(String name) {
+        return roleRepository.getByName(name);
     }
 
     //Product

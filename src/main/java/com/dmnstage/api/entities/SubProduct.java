@@ -1,5 +1,6 @@
 package com.dmnstage.api.entities;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import javax.persistence.*;
@@ -18,8 +19,10 @@ public class SubProduct implements Serializable {
 
     private String pathName;
 
+    @JsonFormat(pattern = "HH:mm")
     private LocalTime startTime;
 
+    @JsonFormat(pattern = "HH:mm")
     private LocalTime endTime;
 
     private int step;
@@ -43,7 +46,7 @@ public class SubProduct implements Serializable {
     public SubProduct(String name, String pathName, LocalTime startTime, LocalTime endTime, int step, String ext) {
         this.name = name;
         this.pathName = pathName;
-        this.startTime = startTime;
+        this.startTime = startTime; //LocalTime.of(startTime.getHour(), startTime.getMinute());
         this.endTime = endTime;
         this.step = step;
         this.ext = ext;

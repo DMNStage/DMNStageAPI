@@ -26,9 +26,11 @@ public interface IService {
 
     User getUserByUsername(String username);
 
-    List<Admin> getAllAdmins();
+    List<User> getAllUsers();
 
-    List<Client> getAllClients();
+    List<User> getAllAdmins();
+
+    List<User> getAllClients();
 
     Admin setAdmin(Admin admin);
 
@@ -49,6 +51,7 @@ public interface IService {
 
     //Role
     Role newRole(Role role);
+    Role getRoleByName(String name);
 
     //SubProduct
     SubProduct newSubProduct(SubProduct subProduct);

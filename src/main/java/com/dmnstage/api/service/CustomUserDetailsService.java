@@ -47,9 +47,9 @@ public class CustomUserDetailsService implements UserDetailsService {
 
     private Collection<GrantedAuthority> getGrantedAuthorities(User user) {
         Collection<GrantedAuthority> grantedAuthorities = new ArrayList<>();
-        if (user.getRoles().get(0).getRole().equals("admin")) {
+        if (user.getRoles().get(0).getName().equals("admin")) {
             grantedAuthorities.add(new SimpleGrantedAuthority("ROLE_ADMIN"));
-        } else if (user.getRoles().get(0).getRole().equals("client"))
+        } else if (user.getRoles().get(0).getName().equals("client"))
             grantedAuthorities.add(new SimpleGrantedAuthority("ROLE_CLIENT"));
         return grantedAuthorities;
     }

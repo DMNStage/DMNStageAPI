@@ -22,6 +22,8 @@ import javax.sql.DataSource;
 @EnableAuthorizationServer
 public class AuthorizationServerConfig extends AuthorizationServerConfigurerAdapter {
 
+    //@Value("#{authenticationConfiguration.authenticationManager}")
+    //@Qualifier(BeanIds.AUTHENTICATION_MANAGER)
     private final AuthenticationManager authenticationManager;
 
     private final PasswordEncoder passwordEncoder;
@@ -62,7 +64,7 @@ public class AuthorizationServerConfig extends AuthorizationServerConfigurerAdap
                 .secret(passwordEncoder.encode("secret"))
                 .authorizedGrantTypes("password", "authorization_code", "refresh_token", "implicit")
                 .scopes("user_info")
-                .autoApprove(true).accessTokenValiditySeconds(50).refreshTokenValiditySeconds(200);
+                .autoApprove(true).accessTokenValiditySeconds(50000).refreshTokenValiditySeconds(100000);
     }
 
     @Override
