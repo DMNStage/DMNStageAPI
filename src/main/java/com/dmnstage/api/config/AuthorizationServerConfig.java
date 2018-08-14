@@ -22,8 +22,6 @@ import javax.sql.DataSource;
 @EnableAuthorizationServer
 public class AuthorizationServerConfig extends AuthorizationServerConfigurerAdapter {
 
-    //@Value("#{authenticationConfiguration.authenticationManager}")
-    //@Qualifier(BeanIds.AUTHENTICATION_MANAGER)
     private final AuthenticationManager authenticationManager;
 
     private final PasswordEncoder passwordEncoder;
@@ -53,7 +51,6 @@ public class AuthorizationServerConfig extends AuthorizationServerConfigurerAdap
     public void configure(AuthorizationServerSecurityConfigurer security) {
         security.tokenKeyAccess("permitAll()")
                 .checkTokenAccess("isAuthenticated()").passwordEncoder(passwordEncoder);
-//        security.checkTokenAccess("isAuthenticated()"); ma3endhach "ala9a
     }
 
     @Override
@@ -72,7 +69,6 @@ public class AuthorizationServerConfig extends AuthorizationServerConfigurerAdap
         endpoints.tokenStore(tokenStore()).authenticationManager(authenticationManager).
                 userDetailsService(customUserDetailsService)
                 .tokenEnhancer(tokenEnhancer());
-
     }
 
 }
