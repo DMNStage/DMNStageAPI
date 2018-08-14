@@ -15,13 +15,14 @@ import java.io.IOException;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.time.LocalTime;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
 //import javax.json.JsonObject;
 //import javax.json.JsonArray;
 
-
+@CrossOrigin("*")
 @RestController
 public class RestService {
 
@@ -72,21 +73,74 @@ public class RestService {
         }
     }
 
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
+    @RequestMapping(value = "/users/admin", produces = "application/json", method = RequestMethod.POST)
+    public ResponseEntity<?> newAdmin(@RequestBody Admin admin) {
+
+        if (service.getUserByUsername(admin.getUsername()) == null) {
+            service.mergeUsersRole(admin,service.getRoleByName("admin"));
+            return new ResponseEntity<>(service.newUser(admin), HttpStatus.OK);
+        }
+        return new ResponseEntity<>(  "{\"result\":\"Ce nom d'utilisateur existe deja\"}", HttpStatus.BAD_REQUEST);
+    }
+
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
+    @RequestMapping(value = "/users/client", produces = "application/json", method = RequestMethod.POST)
+    public ResponseEntity<?> nclient(@RequestBody Client client) {
+
+        if (service.getUserByUsername(client.getUsername()) == null) {
+
+            SubProduct subProduct;
+            for (int i = 0; i < client.getSubProducts().size(); i++) {
+                subProduct = service.getSubProductById(client.getSubProducts().get(i).getId());
+                client.getSubProducts().remove(i);
+                //mergeClientSubProduct
+                client.getSubProducts().add(i,subProduct);
+                subProduct.addClient(client);
+            }
+
+              //another solution
+//            List<SubProduct> subProducts = new ArrayList<>();
+//            SubProduct subProduct;
+//            for (int i = 0; i < client.getSubProducts().size(); i++) {
+//                subProduct = service.getSubProductById(client.getSubProducts().get(i).getId());
+//                subProducts.add(subProduct);
+//            }
+//            client.getSubProducts().clear();
+//            for (int i = 0; i < subProducts.size(); i++) {
+//                service.mergeClientSubProduct(client, subProducts.get(i));
+//            }
+
+            service.mergeUsersRole(client,service.getRoleByName("client"));
+            return new ResponseEntity<>(service.newUser(client), HttpStatus.OK);
+        }
+        return new ResponseEntity<>(  "{\"result\":\"Ce nom d'utilisateur existe deja\"}", HttpStatus.BAD_REQUEST);
+    }
 
 //      {
-//      "client": {
-//      "username": "b",
-//      "password": "d",
-//      "email": "d",
-//      "phone": "d",
-//      "organizationName": "f"
-//      },
-//      "selectedSubProduct": [
-//      1,
-//      2,
-//      3
-//      ]
+//          "client": {
+//              "username": "b",
+//              "password": "d",
+//              "email": "d",
+//              "phone": "d",
+//              "active": 1,
+//              "organizationName": "f"
+//          },
+//          "selectedSubProduct": [1, 2, 3]
 //      }
+
+//        {
+//            "username": "aaa",
+//            "password": "aa",
+//            "email": "aa@aa.com",
+//            "phone": "+21200000000",
+//            "active": 1,
+//            "organizationName": "aa",
+//            "subProducts": [
+//                {"id": 2 },
+//                {"id": 3 }
+//            ]
+//         }
 
     @PreAuthorize("hasRole('ROLE_ADMIN')")
     @RequestMapping(value = "/users", produces = "application/json", method = RequestMethod.POST)
@@ -102,6 +156,7 @@ public class RestService {
                 client.setEmail(clientJson.getString("email"));
                 client.setPhone(clientJson.getString("phone"));
                 client.setOrganizationName(clientJson.getString("organizationName"));
+                client.setActive(clientJson.getInt("active"));
                 service.mergeUsersRole(client,service.getRoleByName("client"));
                 JSONArray subProductJsonArray = jObject.getJSONArray("selectedSubProduct");
 
@@ -127,6 +182,7 @@ public class RestService {
                 admin.setPhone(adminJson.getString("phone"));
                 admin.setFirstName(adminJson.getString("firstname"));
                 admin.setLastName(adminJson.getString("lastname"));
+                admin.setActive(adminJson.getInt("active"));
                 service.mergeUsersRole(admin,service.getRoleByName("admin"));
                 return new ResponseEntity<>(service.newUser(admin), HttpStatus.OK);
             }
@@ -149,6 +205,7 @@ public class RestService {
             clientForm.setEmail(clientJson.getString("email"));
             clientForm.setPhone(clientJson.getString("phone"));
             clientForm.setOrganizationName(clientJson.getString("organizationName"));
+            clientForm.setActive(clientJson.getInt("active"));
             service.mergeUsersRole(clientForm,service.getRoleByName("client"));
 
             //Getting user from DB
@@ -187,6 +244,7 @@ public class RestService {
             adminForm.setPhone(adminJson.getString("phone"));
             adminForm.setFirstName(adminJson.getString("firstname"));
             adminForm.setLastName(adminJson.getString("lastname"));
+            adminForm.setActive(adminJson.getInt("active"));
             service.mergeUsersRole(adminForm,service.getRoleByName("admin"));
 
             //Getting user from DB
