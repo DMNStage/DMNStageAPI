@@ -15,7 +15,9 @@ public interface IService {
 
     void mergeClientSubProduct(Client client, SubProduct subProduct);
 
-    void mergeUsersRole(User user, Role role);
+//    void addUserToRole(User user, Role role);
+
+    void addUserToRole(User user, Role role);
 
     //User
     User newUser(User user);

@@ -3,7 +3,6 @@ package com.dmnstage.api.web;
 import com.dmnstage.api.config.ITokenService;
 import com.dmnstage.api.entities.*;
 import com.dmnstage.api.service.IService;
-import org.json.JSONArray;
 import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -16,7 +15,6 @@ import java.io.IOException;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.time.LocalTime;
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Objects;
@@ -152,23 +150,11 @@ public class RestService {
     }
 
     @PreAuthorize("hasRole('ROLE_ADMIN')")
-    @RequestMapping(value = "/users/{id}", produces = "application/json", method = RequestMethod.DELETE)
-    public ResponseEntity<?> deleteUser(@PathVariable Integer id) {
-        User user = service.getUserById(id);
-        if(user == null){
-            return new ResponseEntity<>("{\"result\":\"L'utilisateur n'existe pas\"}", HttpStatus.NOT_FOUND);
-        }else{
-            service.deleteUser(id);
-            return new ResponseEntity<>(  "{\"result\":\"L'utilisateur a été supprimé\"}", HttpStatus.OK);
-        }
-    }
-
-    @PreAuthorize("hasRole('ROLE_ADMIN')")
     @RequestMapping(value = "/users/admin", produces = "application/json", method = RequestMethod.POST)
     public ResponseEntity<?> newAdmin(@RequestBody Admin admin) {
 
         if (service.getUserByUsername(admin.getUsername()) == null) {
-            service.mergeUsersRole(admin,service.getRoleByName("admin"));
+            service.addUserToRole(admin,service.getRoleByName("admin"));
             return new ResponseEntity<>(service.newUser(admin), HttpStatus.OK);
         }
         return new ResponseEntity<>(  "{\"result\":\"Ce nom d'utilisateur existe deja\"}", HttpStatus.BAD_REQUEST);
@@ -201,13 +187,71 @@ public class RestService {
 //                service.mergeClientSubProduct(client, subProducts.get(i));
 //            }
 
-            service.mergeUsersRole(client,service.getRoleByName("client"));
+            service.addUserToRole(client,service.getRoleByName("client"));
             return new ResponseEntity<>(service.newUser(client), HttpStatus.OK);
         }
         return new ResponseEntity<>(  "{\"result\":\"Ce nom d'utilisateur existe deja\"}", HttpStatus.BAD_REQUEST);
     }
 
-//      {
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
+    @RequestMapping(value = "/users/admin/{id}", produces = "application/json", method = RequestMethod.PUT)
+    public ResponseEntity<?> newAdmin(@RequestBody Admin admin, @PathVariable Integer id) {
+        User adminInDB = service.getUserById(id);
+        if (adminInDB.getUsername().equals(admin.getUsername()) ||
+                (!adminInDB.getUsername().equals(admin.getUsername()) && service.getUserByUsername(admin.getUsername()) == null)) {
+            if (admin.getPassword() == null || (admin.getPassword() != null && admin.getPassword().isEmpty()))
+                admin.setPassword(adminInDB.getPassword());
+            else {
+                //Hashing
+                admin.setPassword(passwordEncoder.encode(admin.getPassword()));
+            }
+            service.addUserToRole(admin,adminInDB.getRole());
+            admin.setId(id);
+            return new ResponseEntity<>(service.setAdmin(admin), HttpStatus.OK);
+        }
+        return new ResponseEntity<>(  "{\"result\":\"Ce nom d'utilisateur existe deja\"}", HttpStatus.BAD_REQUEST);
+    }
+
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
+    @RequestMapping(value = "/users/client/{id}", produces = "application/json", method = RequestMethod.PUT)
+    public ResponseEntity<?> nclient(@RequestBody Client client, @PathVariable Integer id) {
+        User clientInDB = service.getUserById(id);
+        if (clientInDB.getUsername().equals(client.getUsername()) ||
+                (!clientInDB.getUsername().equals(client.getUsername()) && service.getUserByUsername(client.getUsername()) == null)) {
+            if (client.getPassword() == null || (client.getPassword() != null && client.getPassword().isEmpty()))
+                client.setPassword(clientInDB.getPassword());
+            else {
+                //Hashing
+                client.setPassword(passwordEncoder.encode(client.getPassword()));
+            }
+            SubProduct subProduct;
+            for (int i = 0; i < client.getSubProducts().size(); i++) {
+                subProduct = service.getSubProductById(client.getSubProducts().get(i).getId());
+                client.getSubProducts().remove(i);
+                //mergeClientSubProduct
+                client.getSubProducts().add(i,subProduct);
+                subProduct.addClient(client);
+            }
+            service.addUserToRole(client,clientInDB.getRole());
+            client.setId(id);
+            return new ResponseEntity<>(service.setClient(client), HttpStatus.OK);
+        }
+        return new ResponseEntity<>(  "{\"result\":\"Ce nom d'utilisateur existe deja\"}", HttpStatus.BAD_REQUEST);
+    }
+
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
+    @RequestMapping(value = "/users/{id}", produces = "application/json", method = RequestMethod.DELETE)
+    public ResponseEntity<?> deleteUser(@PathVariable Integer id) {
+        User user = service.getUserById(id);
+        if(user == null){
+            return new ResponseEntity<>("{\"result\":\"L'utilisateur n'existe pas\"}", HttpStatus.NOT_FOUND);
+        }else{
+            service.deleteUser(id);
+            return new ResponseEntity<>(  "{\"result\":\"L'utilisateur a été supprimé\"}", HttpStatus.OK);
+        }
+    }
+
+    //      {
 //          "client": {
 //              "username": "b",
 //              "password": "d",
@@ -232,137 +276,134 @@ public class RestService {
 //            ]
 //         }
 
-    @PreAuthorize("hasRole('ROLE_ADMIN')")
-    @RequestMapping(value = "/users", produces = "application/json", method = RequestMethod.POST)
-    public ResponseEntity<?> newClient(@RequestBody String jsonStr, @RequestParam String type) {
+//    @PreAuthorize("hasRole('ROLE_ADMIN')")
+//    @RequestMapping(value = "/users", produces = "application/json", method = RequestMethod.POST)
+//    public ResponseEntity<?> newClient(@RequestBody String jsonStr, @RequestParam String type) {
+//
+//        if(Objects.equals(type, "client")){
+//            JSONObject jObject = new JSONObject(jsonStr);
+//            JSONObject clientJson = jObject.getJSONObject("client");
+//            if (service.getUserByUsername(clientJson.getString("username")) == null) {
+//                Client client = new Client();
+//                client.setUsername(clientJson.getString("username"));
+//                client.setPassword(clientJson.getString("password"));
+//                client.setEmail(clientJson.getString("email"));
+//                client.setPhone(clientJson.getString("phone"));
+//                client.setOrganizationName(clientJson.getString("organizationName"));
+//                client.setActive(clientJson.getInt("active"));
+//                service.addUserToRole(client,service.getRoleByName("client"));
+//                JSONArray subProductJsonArray = jObject.getJSONArray("selectedSubProduct");
+//
+//                SubProduct subProduct;
+//                for (int i = 0; i < subProductJsonArray.length(); i++) {
+//                    subProduct = service.getSubProductById(subProductJsonArray.getInt(i));
+//                    service.mergeClientSubProduct(client, subProduct);
+//                }
+//
+//                return new ResponseEntity<>(service.newUser(client), HttpStatus.OK);
+//            }
+//
+//            return new ResponseEntity<>(  "{\"result\":\"Ce nom d'utilisateur existe deja\"}", HttpStatus.BAD_REQUEST);
+//        }
+//        else if(Objects.equals(type, "admin")){
+//            JSONObject adminJson = new JSONObject(jsonStr);
+//            if (service.getUserByUsername(adminJson.getString("username")) == null) {
+//                Admin admin = new Admin();
+//
+//                admin.setUsername(adminJson.getString("username"));
+//                admin.setPassword(adminJson.getString("password"));
+//                admin.setEmail(adminJson.getString("email"));
+//                admin.setPhone(adminJson.getString("phone"));
+//                admin.setFirstName(adminJson.getString("firstname"));
+//                admin.setLastName(adminJson.getString("lastname"));
+//                admin.setActive(adminJson.getInt("active"));
+//                service.addUserToRole(admin,service.getRoleByName("admin"));
+//                return new ResponseEntity<>(service.newUser(admin), HttpStatus.OK);
+//            }
+//            return new ResponseEntity<>(  "{\"result\":\"Ce nom d'utilisateur existe deja\"}", HttpStatus.BAD_REQUEST);
+//        }
+//        else
+//            return new ResponseEntity<>(  "{\"result\":\"Operation échouée, le type d'utilisateur est manquant\"}", HttpStatus.BAD_REQUEST);
+//    }
 
-        if(Objects.equals(type, "client")){
-            JSONObject jObject = new JSONObject(jsonStr);
-            JSONObject clientJson = jObject.getJSONObject("client");
-            if (service.getUserByUsername(clientJson.getString("username")) == null) {
-                Client client = new Client();
-                client.setUsername(clientJson.getString("username"));
-                client.setPassword(clientJson.getString("password"));
-                client.setEmail(clientJson.getString("email"));
-                client.setPhone(clientJson.getString("phone"));
-                client.setOrganizationName(clientJson.getString("organizationName"));
-                client.setActive(clientJson.getInt("active"));
-                service.mergeUsersRole(client,service.getRoleByName("client"));
-                JSONArray subProductJsonArray = jObject.getJSONArray("selectedSubProduct");
-
-                SubProduct subProduct;
-                for (int i = 0; i < subProductJsonArray.length(); i++) {
-                    subProduct = service.getSubProductById(subProductJsonArray.getInt(i));
-                    service.mergeClientSubProduct(client, subProduct);
-                }
-
-                return new ResponseEntity<>(service.newUser(client), HttpStatus.OK);
-            }
-
-            return new ResponseEntity<>(  "{\"result\":\"Ce nom d'utilisateur existe deja\"}", HttpStatus.BAD_REQUEST);
-        }
-        else if(Objects.equals(type, "admin")){
-            JSONObject adminJson = new JSONObject(jsonStr);
-            if (service.getUserByUsername(adminJson.getString("username")) == null) {
-                Admin admin = new Admin();
-
-                admin.setUsername(adminJson.getString("username"));
-                admin.setPassword(adminJson.getString("password"));
-                admin.setEmail(adminJson.getString("email"));
-                admin.setPhone(adminJson.getString("phone"));
-                admin.setFirstName(adminJson.getString("firstname"));
-                admin.setLastName(adminJson.getString("lastname"));
-                admin.setActive(adminJson.getInt("active"));
-                service.mergeUsersRole(admin,service.getRoleByName("admin"));
-                return new ResponseEntity<>(service.newUser(admin), HttpStatus.OK);
-            }
-            return new ResponseEntity<>(  "{\"result\":\"Ce nom d'utilisateur existe deja\"}", HttpStatus.BAD_REQUEST);
-        }
-        else
-            return new ResponseEntity<>(  "{\"result\":\"Operation échouée, le type d'utilisateur est manquant\"}", HttpStatus.BAD_REQUEST);
-    }
-
-    @PreAuthorize("hasRole('ROLE_ADMIN')")
-    @RequestMapping(value = "/users/{id}", method = RequestMethod.PUT)
-    public ResponseEntity<?> setClient(@RequestBody String jsonStr, @RequestParam String type, @PathVariable Integer id) {
-        if(Objects.equals(type, "client")){
-            JSONObject jObject = new JSONObject(jsonStr);
-            JSONObject clientJson = jObject.getJSONObject(type);
-
-            Client clientForm = new Client();
-            clientForm.setUsername(clientJson.getString("username"));
-            clientForm.setPassword(clientJson.getString("password"));
-            clientForm.setEmail(clientJson.getString("email"));
-            clientForm.setPhone(clientJson.getString("phone"));
-            clientForm.setOrganizationName(clientJson.getString("organizationName"));
-            clientForm.setActive(clientJson.getInt("active"));
-            service.mergeUsersRole(clientForm,service.getRoleByName("client"));
-
-            //Getting user from DB
-            User clientInDB = service.getUserById(id);
-            // Checking if the username hasn't been changed or it already exist
-            if (clientInDB.getUsername().equals(clientForm.getUsername()) ||
-                    (!clientInDB.getUsername().equals(clientForm.getUsername()) &&
-                            service.getUserByUsername(clientForm.getUsername()) == null)) {
-                //Checking if the password from the Form is empty
-                if (clientForm.getPassword() == null || (clientForm.getPassword() != null && clientForm.getPassword().isEmpty()))
-                    clientForm.setPassword(clientInDB.getPassword());//if it's empty, get the password from the DB
-                else {
-                    //Hashing
-                    clientForm.setPassword(passwordEncoder.encode(clientForm.getPassword()));//If not hash the new password
-                }
-                clientForm.setId(id);
-
-                JSONArray subProductJsonArray = jObject.getJSONArray("selectedSubProduct");
-
-                SubProduct subProduct;
-                for (int i = 0; i < subProductJsonArray.length(); i++) {
-                    subProduct = service.getSubProductById(subProductJsonArray.getInt(i));
-                    service.mergeClientSubProduct(clientForm, subProduct);
-                }
-                return new ResponseEntity<>(service.setClient(clientForm), HttpStatus.OK);
-            }
-            return new ResponseEntity<>("Ce nom d'utilisateur existe deja", HttpStatus.BAD_REQUEST);
-        }
-        else if (Objects.equals(type, "admin")){
-            JSONObject adminJson = new JSONObject(jsonStr);
-
-            Admin adminForm = new Admin();
-            adminForm.setUsername(adminJson.getString("username"));
-            adminForm.setPassword(adminJson.getString("password"));
-            adminForm.setEmail(adminJson.getString("email"));
-            adminForm.setPhone(adminJson.getString("phone"));
-            adminForm.setFirstName(adminJson.getString("firstname"));
-            adminForm.setLastName(adminJson.getString("lastname"));
-            adminForm.setActive(adminJson.getInt("active"));
-            service.mergeUsersRole(adminForm,service.getRoleByName("admin"));
-
-            //Getting user from DB
-            User clientInDB = service.getUserById(id);
-            // Checking if the username hasn't been changed or it already exist
-            if (clientInDB.getUsername().equals(adminForm.getUsername()) ||
-                    (!clientInDB.getUsername().equals(adminForm.getUsername()) &&
-                            service.getUserByUsername(adminForm.getUsername()) == null)) {
-                //Checking if the password from the Form is empty
-                if (adminForm.getPassword() == null || (adminForm.getPassword() != null && adminForm.getPassword().isEmpty()))
-                    adminForm.setPassword(clientInDB.getPassword());//if it's empty, get the password from the DB
-                else {
-                    //Hashing
-                    adminForm.setPassword(passwordEncoder.encode(adminForm.getPassword()));//If not hash the new password
-                }
-                adminForm.setId(id);
-                return new ResponseEntity<>(service.setAdmin(adminForm), HttpStatus.OK);
-            }
-            return new ResponseEntity<>("Ce nom d'utilisateur existe deja", HttpStatus.BAD_REQUEST);
-        }
-        else{
-            return new ResponseEntity<>("{\"result\":\"Operation échouée, le type d'utilisateur est manquant\"}", HttpStatus.BAD_REQUEST);
-        }
-
-    }
-
-    //    ResponseEntity<?>
-//    return new ResponseEntity<>(service.newUser(client), HttpStatus.OK);
+//    @PreAuthorize("hasRole('ROLE_ADMIN')")
+//    @RequestMapping(value = "/users/{id}", method = RequestMethod.PUT)
+//    public ResponseEntity<?> setClient(@RequestBody String jsonStr, @RequestParam String type, @PathVariable Integer id) {
+//        if(Objects.equals(type, "client")){
+//            JSONObject jObject = new JSONObject(jsonStr);
+//            JSONObject clientJson = jObject.getJSONObject(type);
+//
+//            Client clientForm = new Client();
+//            clientForm.setUsername(clientJson.getString("username"));
+//            clientForm.setPassword(clientJson.getString("password"));
+//            clientForm.setEmail(clientJson.getString("email"));
+//            clientForm.setPhone(clientJson.getString("phone"));
+//            clientForm.setOrganizationName(clientJson.getString("organizationName"));
+//            clientForm.setActive(clientJson.getInt("active"));
+//            service.addUserToRole(clientForm,service.getRoleByName("client"));
+//
+//            //Getting user from DB
+//            User clientInDB = service.getUserById(id);
+//            // Checking if the username hasn't been changed or it already exist
+//            if (clientInDB.getUsername().equals(clientForm.getUsername()) ||
+//                    (!clientInDB.getUsername().equals(clientForm.getUsername()) &&
+//                            service.getUserByUsername(clientForm.getUsername()) == null)) {
+//                //Checking if the password from the Form is empty
+//                if (clientForm.getPassword() == null || (clientForm.getPassword() != null && clientForm.getPassword().isEmpty()))
+//                    clientForm.setPassword(clientInDB.getPassword());//if it's empty, get the password from the DB
+//                else {
+//                    //Hashing
+//                    clientForm.setPassword(passwordEncoder.encode(clientForm.getPassword()));//If not hash the new password
+//                }
+//                clientForm.setId(id);
+//
+//                JSONArray subProductJsonArray = jObject.getJSONArray("selectedSubProduct");
+//
+//                SubProduct subProduct;
+//                for (int i = 0; i < subProductJsonArray.length(); i++) {
+//                    subProduct = service.getSubProductById(subProductJsonArray.getInt(i));
+//                    service.mergeClientSubProduct(clientForm, subProduct);
+//                }
+//                return new ResponseEntity<>(service.setClient(clientForm), HttpStatus.OK);
+//            }
+//            return new ResponseEntity<>("Ce nom d'utilisateur existe deja", HttpStatus.BAD_REQUEST);
+//        }
+//        else if (Objects.equals(type, "admin")){
+//            JSONObject adminJson = new JSONObject(jsonStr);
+//
+//            Admin adminForm = new Admin();
+//            adminForm.setUsername(adminJson.getString("username"));
+//            adminForm.setPassword(adminJson.getString("password"));
+//            adminForm.setEmail(adminJson.getString("email"));
+//            adminForm.setPhone(adminJson.getString("phone"));
+//            adminForm.setFirstName(adminJson.getString("firstname"));
+//            adminForm.setLastName(adminJson.getString("lastname"));
+//            adminForm.setActive(adminJson.getInt("active"));
+//            service.addUserToRole(adminForm,service.getRoleByName("admin"));
+//
+//            //Getting user from DB
+//            User clientInDB = service.getUserById(id);
+//            // Checking if the username hasn't been changed or it already exist
+//            if (clientInDB.getUsername().equals(adminForm.getUsername()) ||
+//                    (!clientInDB.getUsername().equals(adminForm.getUsername()) &&
+//                            service.getUserByUsername(adminForm.getUsername()) == null)) {
+//                //Checking if the password from the Form is empty
+//                if (adminForm.getPassword() == null || (adminForm.getPassword() != null && adminForm.getPassword().isEmpty()))
+//                    adminForm.setPassword(clientInDB.getPassword());//if it's empty, get the password from the DB
+//                else {
+//                    //Hashing
+//                    adminForm.setPassword(passwordEncoder.encode(adminForm.getPassword()));//If not hash the new password
+//                }
+//                adminForm.setId(id);
+//                return new ResponseEntity<>(service.setAdmin(adminForm), HttpStatus.OK);
+//            }
+//            return new ResponseEntity<>("Ce nom d'utilisateur existe deja", HttpStatus.BAD_REQUEST);
+//        }
+//        else{
+//            return new ResponseEntity<>("{\"result\":\"Operation échouée, le type d'utilisateur est manquant\"}", HttpStatus.BAD_REQUEST);
+//        }
+//
+//    }
 
     //
     // products

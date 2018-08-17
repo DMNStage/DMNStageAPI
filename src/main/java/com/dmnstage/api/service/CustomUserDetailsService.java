@@ -11,11 +11,13 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
 import java.util.Collection;
 
 @Service
+@Transactional
 public class CustomUserDetailsService implements UserDetailsService {
 
     private final UserRepository userRepository;
@@ -47,9 +49,10 @@ public class CustomUserDetailsService implements UserDetailsService {
 
     private Collection<GrantedAuthority> getGrantedAuthorities(User user) {
         Collection<GrantedAuthority> grantedAuthorities = new ArrayList<>();
-        if (user.getRoles().get(0).getName().equals("admin")) {
+
+        if (user.getRole().getName().equals("admin")) {
             grantedAuthorities.add(new SimpleGrantedAuthority("ROLE_ADMIN"));
-        } else if (user.getRoles().get(0).getName().equals("client"))
+        } else if (user.getRole().getName().equals("client"))
             grantedAuthorities.add(new SimpleGrantedAuthority("ROLE_CLIENT"));
         return grantedAuthorities;
     }

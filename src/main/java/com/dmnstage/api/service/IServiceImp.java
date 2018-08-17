@@ -52,10 +52,16 @@ public class IServiceImp implements IService {
         product.addSubProduct(subProduct);
     }
 
+//    @Override
+//    public void addUserToRole(User user, Role role) { // Many To Many (Bi)
+//        role.addUser(user);
+//        user.addRole(role);
+//    }
+
     @Override
-    public void mergeUsersRole(User user, Role role) { // Many To Many (Bi)
+    public void addUserToRole(User user, Role role) {
         role.addUser(user);
-        user.addRole(role);
+        user.setRole(role);
     }
 
 //    @Override
