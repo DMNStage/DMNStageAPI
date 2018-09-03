@@ -17,8 +17,8 @@ import java.net.URL;
 import java.time.LocalTime;
 import java.util.HashMap;
 import java.util.List;
-import java.util.Objects;
 import java.util.Map;
+import java.util.Objects;
 
 //import javax.json.JsonObject;
 //import javax.json.JsonArray;
@@ -482,6 +482,13 @@ public class RestService {
     //
     //Config
     //
+
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
+    @RequestMapping(value = "/config/{key}", method = RequestMethod.GET)
+    public Config getConfig(@PathVariable String key) {
+        return service.getConfigByKey(key);
+    }
+
     @PreAuthorize("hasRole('ROLE_ADMIN')")
     @RequestMapping(value = "/config", method = RequestMethod.PUT)
     public ResponseEntity<?> setConfig(@RequestBody Config config) {
