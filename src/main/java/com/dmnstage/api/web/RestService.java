@@ -11,6 +11,7 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 
+import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.net.HttpURLConnection;
 import java.net.URL;
@@ -38,6 +39,12 @@ public class RestService {
         this.service = service;
         this.passwordEncoder = passwordEncoder;
         this.tokenService = tokenService;
+    }
+
+    @RequestMapping("/")
+    @ResponseBody
+    public void welcome(HttpServletResponse response) throws IOException {
+        response.sendRedirect("http://dmnstage.com");
     }
 
     @RequestMapping(method = RequestMethod.GET, value = "/tokens")
