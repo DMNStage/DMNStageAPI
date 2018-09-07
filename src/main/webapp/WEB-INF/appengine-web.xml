@@ -1,0 +1,8 @@
+<!-- [GC GAE] Local: Remove this file if there is a problem if not just leave it -->
+<appengine-web-app xmlns="http://appengine.google.com/ns/1.0">
+    <application>dmnstageapi</application>
+    <version>1</version>
+    <threadsafe>true</threadsafe>
+    <runtime>java8</runtime>
+    <instance-class>F2</instance-class>
+</appengine-web-app>

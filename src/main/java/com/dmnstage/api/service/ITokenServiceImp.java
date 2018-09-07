@@ -1,4 +1,4 @@
-package com.dmnstage.api.config;
+package com.dmnstage.api.service;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
@@ -144,6 +144,23 @@ public class ITokenServiceImp implements ITokenService {
     @Override
     public Map<String, String> revokeToken(String token) {
         return null;
+    }
+
+    @Override
+    public Map<String, String> revokeAllTokensByClientID(String clientId) {
+        Map<String, String> result = new HashMap<>();
+
+        int count = 0;
+        Collection<OAuth2AccessToken> tokens = tokenStore.findTokensByClientId(clientId);
+        if (tokens != null) {
+            for (OAuth2AccessToken token : tokens) {
+                removeAccessRefreshToken(token);
+                count++;
+            }
+        }
+        result.put("result", "ok");
+        result.put("revoked", count + " tokens");
+        return result;
     }
 
     @Override

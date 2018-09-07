@@ -2,6 +2,7 @@
 (done)         - Api(subProduct, datetime) (return url/msg err)
 (done)         - Spring sec with Rest
 (Not Yet)      - /users/3?type=admin (Line 144) illa 3tito admin mais 3tito id dial client
+(Not Yet)      - Token management urls cleanup
 (Not Yet)      - Angular
 (Not Yet)      - Android
 ----------------------------------------------

@@ -1,4 +1,4 @@
-package com.dmnstage.api.config;
+package com.dmnstage.api.service;
 
 import org.springframework.security.oauth2.common.OAuth2AccessToken;
 
@@ -19,6 +19,9 @@ public interface ITokenService {
     Map<String, String> revokeToken(String clientId, String username);
 
     Map<String, String> revokeToken(String token);
+
+    Map<String, String> revokeAllTokensByClientID(String clientId);
+
 
     boolean removeAccessRefreshToken(OAuth2AccessToken accessToken) throws Exception;
 

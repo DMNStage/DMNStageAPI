@@ -6,6 +6,8 @@
     <groupId>com.dmnstage</groupId>
     <artifactId>DMNStageAPI</artifactId>
     <version>0.0.1-SNAPSHOT</version>
+    <!-- [GC GAE] Local: jar GC: war -->
+    <!--<packaging>jar</packaging>-->
     <packaging>jar</packaging>
 
     <name>DMNStage API</name>
@@ -36,17 +38,52 @@
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-web</artifactId>
+
+            <!-- [GC GAE] Local: Comment this ▼ GC: Uncomment -->
+            <!--<exclusions>-->
+            <!--<exclusion>-->
+            <!--<groupId>org.springframework.boot</groupId>-->
+            <!--<artifactId>spring-boot-starter-tomcat</artifactId>-->
+            <!--</exclusion>-->
+            <!--</exclusions>-->
+            <!-- [GC GAE] Local: Comment this ▲ GC: Uncomment -->
+
         </dependency>
+
+        <!-- [GC GAE] Local: Comment this ▼ GC: Uncomment -->
+        <!--<dependency>
+            <groupId>javax.servlet</groupId>
+            <artifactId>javax.servlet-api</artifactId>
+            <version>3.1.0</version>
+            <scope>provided</scope>
+        </dependency>
+
+        &lt;!&ndash; Exclude any jul-to-slf4j &ndash;&gt;
+        <dependency>
+            <groupId>org.slf4j</groupId>
+            <artifactId>jul-to-slf4j</artifactId>
+            <scope>provided</scope>
+        </dependency>-->
+        <!-- [GC GAE] Local: Comment this ▲ GC: Uncomment -->
+
+        <!-- GC GCSQL LocalDatabase: Comment this (if there is a conflict) ▼ Google cloud SQL: Uncomment -->
+        <dependency>
+            <groupId>com.google.cloud.sql</groupId>
+            <artifactId>mysql-socket-factory</artifactId>
+            <version>1.0.9</version>
+        </dependency>
+
+
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-test</artifactId>
             <scope>test</scope>
         </dependency>
-        <dependency>
+        <!--<dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-devtools</artifactId>
             <scope>runtime</scope>
-        </dependency>
+        </dependency>-->
         <dependency>
             <groupId>org.springframework.security</groupId>
             <artifactId>spring-security-test</artifactId>
@@ -111,6 +148,15 @@
                 <groupId>org.springframework.boot</groupId>
                 <artifactId>spring-boot-maven-plugin</artifactId>
             </plugin>
+
+            <!-- [GC GAE] Local: Comment this ▼ GC: Uncomment -->
+            <!--<plugin>-->
+            <!--<groupId>com.google.cloud.tools</groupId>-->
+            <!--<artifactId>appengine-maven-plugin</artifactId>-->
+            <!--<version>1.3.1</version>-->
+            <!--</plugin>-->
+            <!-- [GC GAE] Local: Comment this ▲ GC: Uncomment -->
+
         </plugins>
     </build>
 

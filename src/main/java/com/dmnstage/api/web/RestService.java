@@ -1,8 +1,8 @@
 package com.dmnstage.api.web;
 
-import com.dmnstage.api.config.ITokenService;
 import com.dmnstage.api.entities.*;
 import com.dmnstage.api.service.IService;
+import com.dmnstage.api.service.ITokenService;
 import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -129,6 +129,23 @@ public class RestService {
                 break;
         }
         return new ResponseEntity<>(map, httpStatus);
+    }
+
+
+    @RequestMapping(value = "/revoke_all_tokens", method = RequestMethod.GET, produces = "application/json; charset=utf-8")
+    public ResponseEntity<?> revokeAllTokensByClientId(@RequestParam(required = false,
+            name = "clientid", defaultValue = "ClientId") String clientId) {
+        Map<String, String> map;
+        if (!(clientId == null || clientId.trim().equals(""))) {
+            map = tokenService.revokeAllTokensByClientID(clientId);
+
+        } else {
+            map = new HashMap<>();
+            map.put("result", "error");
+            map.put("description", "Invalid parameter (Either pass no parameters or pass the 'username' and 'clientid' parameters)");
+        }
+
+        return new ResponseEntity<>(map, (map.get("result").equalsIgnoreCase("ok") ? HttpStatus.OK : HttpStatus.BAD_REQUEST));
     }
 
     //
