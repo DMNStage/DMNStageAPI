@@ -48,8 +48,9 @@ public class RestService {
     }
 
     @RequestMapping(method = RequestMethod.GET, value = "/tokens")
-    public ResponseEntity<?> getTokens() {
-        return new ResponseEntity<>(tokenService.getAllTokensInfoByClientId("ClientId"), HttpStatus.OK);
+    public ResponseEntity<?> getTokens(@RequestParam(required = false,
+            name = "clientid", defaultValue = "ClientId") String clientId) {
+        return new ResponseEntity<>(tokenService.getAllTokensInfoByClientId(clientId), HttpStatus.OK);
     }
 
     @RequestMapping(method = RequestMethod.POST, value = "/tokeninfo", produces = "application/json; charset=utf-8")
@@ -142,7 +143,8 @@ public class RestService {
         } else {
             map = new HashMap<>();
             map.put("result", "error");
-            map.put("description", "Invalid parameter (Either pass no parameters or pass the 'username' and 'clientid' parameters)");
+            // TODO
+            //map.put("description", "Invalid parameter (Either pass no parameters or pass the 'username' and 'clientid' parameters)");
         }
 
         return new ResponseEntity<>(map, (map.get("result").equalsIgnoreCase("ok") ? HttpStatus.OK : HttpStatus.BAD_REQUEST));

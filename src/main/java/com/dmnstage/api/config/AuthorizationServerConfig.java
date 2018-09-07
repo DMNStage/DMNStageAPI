@@ -1,7 +1,6 @@
 package com.dmnstage.api.config;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -30,7 +29,7 @@ public class AuthorizationServerConfig extends AuthorizationServerConfigurerAdap
     private final DataSource dataSource;
 
     @Autowired
-    public AuthorizationServerConfig(PasswordEncoder passwordEncoder, UserDetailsService customUserDetailsService, DataSource dataSource, @Qualifier("authenticationManagerBean") AuthenticationManager authenticationManager) {
+    public AuthorizationServerConfig(PasswordEncoder passwordEncoder, UserDetailsService customUserDetailsService, DataSource dataSource, AuthenticationManager authenticationManager) {
         this.passwordEncoder = passwordEncoder;
         this.customUserDetailsService = customUserDetailsService;
         this.dataSource = dataSource;

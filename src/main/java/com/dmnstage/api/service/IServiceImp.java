@@ -133,7 +133,7 @@ public class IServiceImp implements IService {
 
     @Override
     public void deleteUser(int id) {
-        userRepository.deleteById(id);
+        userRepository.delete(id);
     }
 
     //Role
@@ -170,7 +170,7 @@ public class IServiceImp implements IService {
 
     @Override
     public void deleteProduct(int id) {
-        productRepository.deleteById(id);
+        productRepository.delete(id);
     }
 
     //SubProduct
@@ -196,7 +196,7 @@ public class IServiceImp implements IService {
 
     @Override
     public void deleteSubProduct(int id) {
-        subProductRepository.deleteById(id);
+        subProductRepository.delete(id);
     }
 
 }
