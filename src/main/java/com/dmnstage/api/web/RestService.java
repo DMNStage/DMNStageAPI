@@ -139,14 +139,10 @@ public class RestService {
         Map<String, String> map;
         if (!(clientId == null || clientId.trim().equals(""))) {
             map = tokenService.revokeAllTokensByClientID(clientId);
-
         } else {
             map = new HashMap<>();
             map.put("result", "error");
-            // TODO
-            //map.put("description", "Invalid parameter (Either pass no parameters or pass the 'username' and 'clientid' parameters)");
         }
-
         return new ResponseEntity<>(map, (map.get("result").equalsIgnoreCase("ok") ? HttpStatus.OK : HttpStatus.BAD_REQUEST));
     }
 
