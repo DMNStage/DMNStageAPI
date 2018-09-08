@@ -1,13 +1,9 @@
 package com.dmnstage.api.entities;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import com.fasterxml.jackson.annotation.JsonProperty;
 
 import javax.persistence.*;
 import java.io.Serializable;
-import java.util.ArrayList;
-import java.util.List;
 
 @Entity
 @Inheritance(strategy = InheritanceType.SINGLE_TABLE)
@@ -27,7 +23,7 @@ public class User implements Serializable {
 
     private String phone;
 
-    private int active;
+    private boolean active;
 
 //    @ManyToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
 //    @JoinTable(name = "user_role",
@@ -41,7 +37,7 @@ public class User implements Serializable {
     @JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
     private Role role;
 
-    User(String username, String password, String email, String phone, int active) {
+    User(String username, String password, String email, String phone, boolean active) {
         this.username = username;
         this.password = password;
         this.email = email;
@@ -92,11 +88,11 @@ public class User implements Serializable {
         this.phone = phone;
     }
 
-    public int getActive() {
+    public boolean getActive() {
         return active;
     }
 
-    public void setActive(int active) {
+    public void setActive(boolean active) {
         this.active = active;
     }
 

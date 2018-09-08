@@ -39,8 +39,8 @@ public class DmnStageApiApplication implements CommandLineRunner {
         Role adminRole = service.newRole(new Role("admin"));
         Role clientRole = service.newRole(new Role("client"));
 
-        User admin1 = service.newUser(new Admin("AbdellahASKI", "654321", "Abdellah@aski.me", "+212707970909", 1, "Abdellah", "ASKI"));
-        User admin2 = service.newUser(new Admin("kumohira", "654321", "youssef@naitsaid.me", "+21200000000", 1, "Youssef", "NAIT SAID"));
+        User admin1 = service.newUser(new Admin("AbdellahASKI", "654321", "Abdellah@aski.me", "+212707970909", true, "Abdellah", "ASKI"));
+        User admin2 = service.newUser(new Admin("kumohira", "654321", "youssef@naitsaid.me", "+21200000000", true, "Youssef", "NAIT SAID"));
 
         service.addUserToRole(admin1, adminRole);
         service.addUserToRole(admin2, adminRole);
@@ -48,8 +48,8 @@ public class DmnStageApiApplication implements CommandLineRunner {
         //User U = service.getAdminById(1);
         //System.out.println(new BCryptPasswordEncoder().matches("654321", U.getPassword()));
 
-        User client1 = service.newUser(new Client("client1", "654321", "client1@client1.com", "+21200000000", 1, "Client1"));
-        User client2 = service.newUser(new Client("client2", "654321", "client2@client2.com", "+21200000000", 1, "Client2"));
+        User client1 = service.newUser(new Client("client1", "654321", "client1@client1.com", "+21200000000", true, "Client1"));
+        User client2 = service.newUser(new Client("client2", "654321", "client2@client2.com", "+21200000000", true, "Client2"));
 
         service.addUserToRole(client1, clientRole);
         service.addUserToRole(client2, clientRole);
