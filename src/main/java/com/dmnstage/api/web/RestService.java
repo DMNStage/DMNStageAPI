@@ -456,7 +456,7 @@ public class RestService {
     }
 
     @PreAuthorize("hasRole('ROLE_ADMIN')")
-    @RequestMapping(value = "/products/{id}", produces = "application/json",        method = RequestMethod.DELETE)
+    @RequestMapping(value = "/products/{id}", produces = "application/json", method = RequestMethod.DELETE)
     public ResponseEntity<?> deleteProduct(@PathVariable Integer id) {
         service.deleteProduct(id);
         return new ResponseEntity<>("{\"result\":\"Le produit a été supprimé\"}", HttpStatus.OK);
@@ -512,13 +512,11 @@ public class RestService {
     }
 
     @PreAuthorize("hasRole('ROLE_ADMIN')")
-    @RequestMapping(value = "/config", method = RequestMethod.PUT)
-    public ResponseEntity<?> setConfig(@RequestBody Config config) {
-        config.setKey("pathFormat");
+    @RequestMapping(value = "/config/{key}", method = RequestMethod.PUT)
+    public ResponseEntity<?> setConfig(@RequestBody Config config, @PathVariable String key) {
+        config.setKey(key);
         return new ResponseEntity<>(service.setConfig(config), HttpStatus.OK);
     }
-
-
 
     //
     // service.setConfig(new Config("pathFormat", "http://img.dmnstage.com/teledetection/#product#/#subProduct#/#year#-#month#-#day#/#hour##minute#.#ext#"));
@@ -560,7 +558,9 @@ public class RestService {
                                        @RequestParam(required = false) String minute
     ) {
         SubProduct subProduct = service.getSubProductById(id);
-        String url = service.getConfigByKey("pathFormat").getValue();
+
+        String url = service.getConfigByKey("host").getValue();
+        url = url + service.getConfigByKey("pathFormat").getValue();
 
         url = url.replace("#product#", subProduct.getProduct().getPathName());
         url = url.replace("#subProduct#", subProduct.getPathName());
