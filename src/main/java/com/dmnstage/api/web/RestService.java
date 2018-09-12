@@ -3,6 +3,7 @@ package com.dmnstage.api.web;
 import com.dmnstage.api.entities.*;
 import com.dmnstage.api.service.IService;
 import com.dmnstage.api.service.ITokenService;
+import org.json.JSONArray;
 import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -47,6 +48,9 @@ public class RestService {
         response.sendRedirect("http://dmnstage.com");
     }
 
+    //
+    // Token
+    //
     @RequestMapping(method = RequestMethod.GET, value = "/tokens")
     public ResponseEntity<?> getTokens(@RequestParam(required = false,
             name = "clientid", defaultValue = "ClientId") String clientId) {
@@ -132,7 +136,6 @@ public class RestService {
         return new ResponseEntity<>(map, httpStatus);
     }
 
-
     @RequestMapping(value = "/revoke_all_tokens", method = RequestMethod.GET, produces = "application/json; charset=utf-8")
     public ResponseEntity<?> revokeAllTokensByClientId(@RequestParam(required = false,
             name = "clientid", defaultValue = "ClientId") String clientId) {
@@ -169,6 +172,15 @@ public class RestService {
         }else{
             return new ResponseEntity<>(user, HttpStatus.OK);
         }
+    }
+
+    @PreAuthorize("hasRole('ROLE_ADMIN') or hasRole('ROLE_CLIENT')")
+    @RequestMapping(value = "/clientsbysubproduct/{id}", produces = "application/json", method = RequestMethod.GET)
+    public ResponseEntity<?> getClientsBySubProduct(@PathVariable Integer id) {
+
+        JSONArray jsonArray = new JSONArray(service.getClientsBySubProduct(id));
+
+        return new ResponseEntity<>(jsonArray.toString(), HttpStatus.OK);
     }
 
     @PreAuthorize("hasRole('ROLE_ADMIN')")

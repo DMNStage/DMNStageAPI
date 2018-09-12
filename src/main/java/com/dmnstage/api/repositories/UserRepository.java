@@ -1,7 +1,5 @@
 package com.dmnstage.api.repositories;
 
-import com.dmnstage.api.entities.Admin;
-import com.dmnstage.api.entities.Client;
 import com.dmnstage.api.entities.User;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
@@ -30,4 +28,6 @@ public interface UserRepository extends JpaRepository<User, Integer> {
     @Query("select u from User u where TYPE(u) = 'Client' AND u.id= :id")
     User findClientByID(@Param("id") int id);
 
+    @Query(value = "select u.username from User u inner join client_sub_product as s on u.id = s.client_id where s.sub_product_id = ?1", nativeQuery = true)
+    List<String> getClientsBySubProduct(int id);
 }

@@ -34,6 +34,8 @@ public interface IService {
 
     List<User> getAllClients();
 
+    List<String> getClientsBySubProduct(int id);
+
     Admin setAdmin(Admin admin);
 
     Client setClient(Client client);
