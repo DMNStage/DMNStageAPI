@@ -1,9 +1,10 @@
 package com.dmnstage.api.entities;
 
 import javax.persistence.*;
+import java.io.Serializable;
 
 @Entity
-public class oauth_refresh_token {
+public class oauth_refresh_token implements Serializable {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

@@ -1,5 +1,7 @@
 package com.dmnstage.api.service;
 
+import com.dmnstage.api.repositories.oauth_access_tokenRepository;
+import com.dmnstage.api.repositories.oauth_refresh_tokenRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -20,9 +22,15 @@ import java.util.*;
 public class ITokenServiceImp implements ITokenService {
     private final TokenStore tokenStore;
 
+    private final oauth_access_tokenRepository oauthAccessTokenRepository;
+
+    private final oauth_refresh_tokenRepository oauthRefreshTokenRepository;
+
     @Autowired
-    public ITokenServiceImp(TokenStore tokenStore) {
+    public ITokenServiceImp(TokenStore tokenStore, oauth_access_tokenRepository oauthAccessTokenRepository, oauth_refresh_tokenRepository oauthRefreshTokenRepository) {
         this.tokenStore = tokenStore;
+        this.oauthAccessTokenRepository = oauthAccessTokenRepository;
+        this.oauthRefreshTokenRepository = oauthRefreshTokenRepository;
     }
 
 
@@ -81,6 +89,7 @@ public class ITokenServiceImp implements ITokenService {
             map.put("result", "expired");
             map.put("expireIn", String.valueOf(oAuth2AccessToken.getExpiresIn()));
             map.put("username", oAuth2AccessToken.getAdditionalInformation().get("username").toString());
+            map.put("expiration", oAuth2AccessToken.getExpiration().toString());
             map.put("accesstoken", oAuth2AccessToken.getValue());
             map.put("active", getActiveDuration(new Timestamp(oAuth2AccessToken.getExpiration().getTime()).toLocalDateTime()));
             System.out.println(oAuth2AccessToken.getExpiration());
@@ -89,6 +98,7 @@ public class ITokenServiceImp implements ITokenService {
             map.put("result", "ok");
             map.put("expireIn", String.valueOf(oAuth2AccessToken.getExpiresIn()));
             map.put("username", oAuth2AccessToken.getAdditionalInformation().get("username").toString());
+            map.put("expiration", oAuth2AccessToken.getExpiration().toString());
             map.put("accesstoken", oAuth2AccessToken.getValue());
             map.put("active", getActiveDuration(new Timestamp(oAuth2AccessToken.getExpiration().getTime()).toLocalDateTime()));
         }
@@ -158,6 +168,8 @@ public class ITokenServiceImp implements ITokenService {
                 count++;
             }
         }
+        oauthAccessTokenRepository.deleteAll();
+        oauthRefreshTokenRepository.deleteAll();
         result.put("result", "ok");
         result.put("revoked", count + " tokens");
         return result;

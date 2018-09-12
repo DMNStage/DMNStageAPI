@@ -53,6 +53,10 @@ public class RestService {
         return new ResponseEntity<>(tokenService.getAllTokensInfoByClientId(clientId), HttpStatus.OK);
     }
 
+    @RequestMapping(method = RequestMethod.HEAD, value = "/checktoken")
+    public void checkToken() {
+    }
+
     @RequestMapping(method = RequestMethod.POST, value = "/tokeninfo", produces = "application/json; charset=utf-8")
     public ResponseEntity<?> getTokenInfo(@RequestParam String by,
                                           @RequestParam(required = false) String token,
@@ -101,7 +105,7 @@ public class RestService {
     }
 
     //if it get the username param it disconnect the user with that username if not it disconnect the connected user that sent that request
-    @RequestMapping(value = "/revoke_token", method = RequestMethod.GET, produces = "application/json; charset=utf-8")
+    @RequestMapping(value = "/revoke_token", method = RequestMethod.POST, produces = "application/json; charset=utf-8")
     public ResponseEntity<?> revokeToken(@RequestParam(required = false, name = "clientid") String clientId,
                                          @RequestParam(required = false) String username) {
         Map<String, String> map;

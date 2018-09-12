@@ -17,7 +17,7 @@ public class CustomTokenEnhancer implements TokenEnhancer {
         User user = (User) oAuth2Authentication.getPrincipal();
         //com.dmnstage.api.entities.User myUser = service.getUserByUsername(user.getUsername());
         final Map<String, Object> additionalInfo = new HashMap<>();
-
+        additionalInfo.put("expiration", oAuth2AccessToken.getExpiration());
         additionalInfo.put("username", user.getUsername());
 
         ((DefaultOAuth2AccessToken) oAuth2AccessToken).setAdditionalInformation(additionalInfo);

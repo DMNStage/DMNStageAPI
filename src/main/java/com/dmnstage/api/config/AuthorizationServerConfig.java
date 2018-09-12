@@ -60,7 +60,7 @@ public class AuthorizationServerConfig extends AuthorizationServerConfigurerAdap
                 .secret(passwordEncoder.encode("secret"))
                 .authorizedGrantTypes("password", "authorization_code", "refresh_token", "implicit")
                 .scopes("user_info")
-                .autoApprove(true).accessTokenValiditySeconds(50000).refreshTokenValiditySeconds(100000);
+                .autoApprove(true).accessTokenValiditySeconds(50).refreshTokenValiditySeconds(100000);
     }
 
     @Override
