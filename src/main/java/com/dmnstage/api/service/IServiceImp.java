@@ -122,6 +122,11 @@ public class IServiceImp implements IService {
     }
 
     @Override
+    public List<String> getClientsBySubProduct(int id) {
+        return userRepository.getClientsBySubProduct(id);
+    }
+
+    @Override
     public Admin setAdmin(Admin admin) {
         return userRepository.save(admin);
     }

@@ -3,6 +3,7 @@ package com.dmnstage.api.web;
 import com.dmnstage.api.entities.*;
 import com.dmnstage.api.service.IService;
 import com.dmnstage.api.service.ITokenService;
+import org.json.JSONArray;
 import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -47,6 +48,9 @@ public class RestService {
         response.sendRedirect("http://dmnstage.com");
     }
 
+    //
+    // Token
+    //
     @RequestMapping(method = RequestMethod.GET, value = "/tokens")
     public ResponseEntity<?> getTokens(@RequestParam(required = false,
             name = "clientid", defaultValue = "ClientId") String clientId) {
@@ -136,7 +140,6 @@ public class RestService {
         return new ResponseEntity<>(map, httpStatus);
     }
 
-
     @RequestMapping(value = "/revoke_all_tokens", method = RequestMethod.GET, produces = "application/json; charset=utf-8")
     public ResponseEntity<?> revokeAllTokensByClientId(@RequestParam(required = false,
             name = "clientid", defaultValue = "ClientId") String clientId) {
@@ -173,6 +176,15 @@ public class RestService {
         }else{
             return new ResponseEntity<>(user, HttpStatus.OK);
         }
+    }
+
+    @PreAuthorize("hasRole('ROLE_ADMIN') or hasRole('ROLE_CLIENT')")
+    @RequestMapping(value = "/clientsbysubproduct/{id}", produces = "application/json", method = RequestMethod.GET)
+    public ResponseEntity<?> getClientsBySubProduct(@PathVariable Integer id) {
+
+        JSONArray jsonArray = new JSONArray(service.getClientsBySubProduct(id));
+
+        return new ResponseEntity<>(jsonArray.toString(), HttpStatus.OK);
     }
 
     @PreAuthorize("hasRole('ROLE_ADMIN')")
@@ -460,7 +472,7 @@ public class RestService {
     }
 
     @PreAuthorize("hasRole('ROLE_ADMIN')")
-    @RequestMapping(value = "/products/{id}", produces = "application/json",        method = RequestMethod.DELETE)
+    @RequestMapping(value = "/products/{id}", produces = "application/json", method = RequestMethod.DELETE)
     public ResponseEntity<?> deleteProduct(@PathVariable Integer id) {
         service.deleteProduct(id);
         return new ResponseEntity<>("{\"result\":\"Le produit a été supprimé\"}", HttpStatus.OK);
@@ -516,13 +528,11 @@ public class RestService {
     }
 
     @PreAuthorize("hasRole('ROLE_ADMIN')")
-    @RequestMapping(value = "/config", method = RequestMethod.PUT)
-    public ResponseEntity<?> setConfig(@RequestBody Config config) {
-        config.setKey("pathFormat");
+    @RequestMapping(value = "/config/{key}", method = RequestMethod.PUT)
+    public ResponseEntity<?> setConfig(@RequestBody Config config, @PathVariable String key) {
+        config.setKey(key);
         return new ResponseEntity<>(service.setConfig(config), HttpStatus.OK);
     }
-
-
 
     //
     // service.setConfig(new Config("pathFormat", "http://img.dmnstage.com/teledetection/#product#/#subProduct#/#year#-#month#-#day#/#hour##minute#.#ext#"));
@@ -564,7 +574,9 @@ public class RestService {
                                        @RequestParam(required = false) String minute
     ) {
         SubProduct subProduct = service.getSubProductById(id);
-        String url = service.getConfigByKey("pathFormat").getValue();
+
+        String url = service.getConfigByKey("host").getValue();
+        url = url + service.getConfigByKey("pathFormat").getValue();
 
         url = url.replace("#product#", subProduct.getProduct().getPathName());
         url = url.replace("#subProduct#", subProduct.getPathName());

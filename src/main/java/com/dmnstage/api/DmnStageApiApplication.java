@@ -33,8 +33,10 @@ public class DmnStageApiApplication implements CommandLineRunner {
     @Transactional
     public void run(String... args) {
         //service.setConfig(new Config("pathFormat", "api.dmnstage.com/img/#Product#-#Subproduct#-#Year#-#Month#-#Day#.jpg"));
-        service.setConfig(new Config("pathFormat", "http://img.dmnstage.com/teledetection/#product#/#subProduct#/#year#-#month#-#day#/#hour##minute#.#ext#"));
+        service.setConfig(new Config("host", "http://img.dmnstage.com"));
+        service.setConfig(new Config("pathFormat", "/teledetection/#product#/#subProduct#/#year#-#month#-#day#/#hour##minute#.#ext#"));
         //service.setConfig(new Config("pathFormat", "extranet.marocmeteo.ma/samba/detections/#product#/#subProduct#/#month##day#/#subProduct#_#year##month##day##hour##minute#.#ext#"));
+
 
         Role adminRole = service.newRole(new Role("admin"));
         Role clientRole = service.newRole(new Role("client"));
