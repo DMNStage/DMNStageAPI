@@ -28,6 +28,6 @@ public interface UserRepository extends JpaRepository<User, Integer> {
     @Query("select u from User u where TYPE(u) = 'Client' AND u.id= :id")
     User findClientByID(@Param("id") int id);
 
-    @Query(value = "select u.username from User u inner join client_sub_product as s on u.id = s.client_id where s.sub_product_id = ?1", nativeQuery = true)
+    @Query(value = "select u.username from user u inner join client_sub_product as s on u.id = s.client_id where s.sub_product_id = ?1", nativeQuery = true)
     List<String> getClientsBySubProduct(int id);
 }
