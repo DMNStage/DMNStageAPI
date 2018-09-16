@@ -56,11 +56,16 @@ public class AuthorizationServerConfig extends AuthorizationServerConfigurerAdap
     public void configure(ClientDetailsServiceConfigurer clients) throws Exception {
         clients
                 .inMemory()
-                .withClient("ClientId")
+                .withClient("AdminApp")
                 .secret(passwordEncoder.encode("secret"))
-                .authorizedGrantTypes("password", "authorization_code", "refresh_token", "implicit")
+                .authorizedGrantTypes("password", "refresh_token")
                 .scopes("user_info")
-                .autoApprove(true).accessTokenValiditySeconds(50).refreshTokenValiditySeconds(100000);
+                .autoApprove(true).accessTokenValiditySeconds(300).refreshTokenValiditySeconds(Integer.MAX_VALUE)
+                .and().withClient("ClientApp")
+                .secret(passwordEncoder.encode("secret"))
+                .authorizedGrantTypes("password", "refresh_token")
+                .scopes("user_info")
+                .autoApprove(true).accessTokenValiditySeconds(300).refreshTokenValiditySeconds(Integer.MAX_VALUE);
     }
 
     @Override
