@@ -458,6 +458,16 @@ public class RestService {
         return service.getAllProducts();
     }
 
+    @PreAuthorize("hasRole('ROLE_CLIENT')")
+    @RequestMapping(value = "/productsbyclient/{username}", produces = "application/json", method = RequestMethod.GET)
+    public List<Product> getProductsByClient(@PathVariable String username) {
+
+        // JSONArray jsonArray = new JSONArray(service.getProductsByClient(username));
+
+        // System.out.println(service.getProductsByClient(username));
+        return service.getProductsByClient(username);
+    }
+
     @PreAuthorize("hasRole('ROLE_ADMIN')")
     @RequestMapping(value = "/products", method = RequestMethod.POST)
     public Product newProduct(@RequestBody Product product) {

@@ -169,6 +169,11 @@ public class IServiceImp implements IService {
     }
 
     @Override
+    public List<Product> getProductsByClient(String username) {
+        return productRepository.getProductsByClient(username);
+    }
+
+    @Override
     public Product setProduct(Product product) {
         return productRepository.save(product);
     }

@@ -49,6 +49,8 @@ public interface IService {
 
     List<Product> getAllProducts();
 
+    List<Product> getProductsByClient(String username);
+
     Product setProduct(Product product);
 
     void deleteProduct(int id);
