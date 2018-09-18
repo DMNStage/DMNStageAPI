@@ -7,6 +7,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.ArrayList;
 import java.util.List;
 
 
@@ -170,7 +171,35 @@ public class IServiceImp implements IService {
 
     @Override
     public List<Product> getProductsByClient(String username) {
-        return productRepository.getProductsByClient(username);
+        List<SubProduct> subProducts = ((Client) getUserByUsername(username)).getSubProducts();
+        System.out.println(subProducts);
+
+        List<Product> products = new ArrayList<>();
+        List<Product> fakeProducts = new ArrayList<>();
+        Product currentProduct;
+        for (SubProduct subproduct : subProducts) {
+            System.out.println("SubProduct:" + subproduct);
+            currentProduct = subproduct.getProduct();
+            System.out.println("current product" + currentProduct);
+
+            int i = fakeProducts.indexOf(currentProduct);
+            System.out.println("i=" + i);
+            if (i == -1) {
+                fakeProducts.add(currentProduct);
+                currentProduct.setSubProducts(new ArrayList<>());
+                currentProduct.getSubProducts().add(subproduct);
+                products.add(currentProduct);
+            } else {
+                products.get(i).getSubProducts().add(subproduct);
+            }
+
+
+            System.out.println("last" + products);
+        }
+
+        System.out.println(fakeProducts);
+        System.out.println(products);
+        return products;
     }
 
     @Override

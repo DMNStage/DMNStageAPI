@@ -117,7 +117,7 @@ public class RestService {
             map = tokenService.revokeToken();
 
         } else if (!(clientId == null || clientId.trim().equals("")) && !(username == null || username.trim().equals(""))) {
-            map = tokenService.revokeToken("clientId", username);
+            map = tokenService.revokeToken(clientId, username);
         } else {
             map = new HashMap<>();
             map.put("result", "error");
@@ -460,12 +460,8 @@ public class RestService {
 
     @PreAuthorize("hasRole('ROLE_CLIENT')")
     @RequestMapping(value = "/productsbyclient/{username}", produces = "application/json", method = RequestMethod.GET)
-    public List<Product> getProductsByClient(@PathVariable String username) {
-
-        // JSONArray jsonArray = new JSONArray(service.getProductsByClient(username));
-
-        // System.out.println(service.getProductsByClient(username));
-        return service.getProductsByClient(username);
+    public ResponseEntity<?> getProductsByClient(@PathVariable String username) throws IOException {
+        return new ResponseEntity<>(service.getProductsByClient(username), HttpStatus.OK);
     }
 
     @PreAuthorize("hasRole('ROLE_ADMIN')")
