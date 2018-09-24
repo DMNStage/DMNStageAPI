@@ -24,18 +24,15 @@ public class DmnStageApiApplication implements CommandLineRunner {
 
     public static void main(String[] args) {
         SpringApplication.run(DmnStageApiApplication.class, args);
-        /*String path;
-        String pathFormat="api.dmnstage.com/img/#Product#-#Subproduct#-#Year#-#Month#-#Day#.jpg";
-        pathFormat=pathFormat.replace("#Category#",Subproduct.pro)*/
     }
 
     @Override
     @Transactional
     public void run(String... args) {
-        //service.setConfig(new Config("pathFormat", "api.dmnstage.com/img/#Product#-#Subproduct#-#Year#-#Month#-#Day#.jpg"));
         service.setConfig(new Config("host", "http://img.dmnstage.com"));
         service.setConfig(new Config("pathFormat", "/teledetection/#product#/#subProduct#/#year#-#month#-#day#/#hour##minute#.#ext#"));
-        //service.setConfig(new Config("pathFormat", "extranet.marocmeteo.ma/samba/detections/#product#/#subProduct#/#month##day#/#subProduct#_#year##month##day##hour##minute#.#ext#"));
+        service.setConfig(new Config("contactEmail", "contact@marocmeteo.ma"));
+
 
 
         Role adminRole = service.newRole(new Role("admin"));
@@ -47,8 +44,6 @@ public class DmnStageApiApplication implements CommandLineRunner {
         service.addUserToRole(admin1, adminRole);
         service.addUserToRole(admin2, adminRole);
 
-        //User U = service.getAdminById(1);
-        //System.out.println(new BCryptPasswordEncoder().matches("654321", U.getPassword()));
 
         User client1 = service.newUser(new Client("client1", "654321", "client1@client1.com", "+21200000000", true, "Client1"));
         User client2 = service.newUser(new Client("client2", "654321", "client2@client2.com", "+21200000000", true, "Client2"));
@@ -90,12 +85,12 @@ public class DmnStageApiApplication implements CommandLineRunner {
         service.addSubProductToProduct(brouillardNuagesBas, satelliteDeveloppe);
         service.addSubProductToProduct(convectionOrage, satelliteDeveloppe);
 
-        SubProduct mosaicA = service.newSubProduct(new SubProduct("Mosaic A", "mosaica", LocalTime.of(0, 0), LocalTime.of(23, 50), 10, "jpg")); //mosaic
-        SubProduct mosaicB = service.newSubProduct(new SubProduct("Mosaic B", "mosaicb", LocalTime.of(0, 0), LocalTime.of(23, 50), 10, "jpg")); //mosaicmosaic
-        SubProduct agadir250 = service.newSubProduct(new SubProduct("Agadir 250", "agadir250", LocalTime.of(0, 0), LocalTime.of(23, 50), 10, "jpg")); //agadir250
-        SubProduct casa250 = service.newSubProduct(new SubProduct("Casa 250", "casa250", LocalTime.of(0, 0), LocalTime.of(23, 50), 10, "jpg")); //casa250
-        SubProduct debdou250 = service.newSubProduct(new SubProduct("Debdou 250", "debdou250", LocalTime.of(0, 0), LocalTime.of(23, 50), 10, "jpg")); //debdou250
-        SubProduct fes250 = service.newSubProduct(new SubProduct("Fes 250", "fes250", LocalTime.of(0, 0), LocalTime.of(23, 50), 10, "jpg")); //fes250
+        SubProduct mosaicA = service.newSubProduct(new SubProduct("Mosaic A", "mosaica", LocalTime.of(0, 0), LocalTime.of(23, 50), 10, "png")); //mosaic
+        SubProduct mosaicB = service.newSubProduct(new SubProduct("Mosaic B", "mosaicb", LocalTime.of(0, 0), LocalTime.of(23, 50), 10, "png")); //mosaicmosaic
+        SubProduct agadir250 = service.newSubProduct(new SubProduct("Agadir 250", "agadir250", LocalTime.of(0, 0), LocalTime.of(23, 50), 10, "png")); //agadir250
+        SubProduct casa250 = service.newSubProduct(new SubProduct("Casa 250", "casa250", LocalTime.of(0, 0), LocalTime.of(23, 50), 10, "png")); //casa250
+        SubProduct debdou250 = service.newSubProduct(new SubProduct("Debdou 250", "debdou250", LocalTime.of(0, 0), LocalTime.of(23, 50), 10, "png")); //debdou250
+        SubProduct fes250 = service.newSubProduct(new SubProduct("Fes 250", "fes250", LocalTime.of(0, 0), LocalTime.of(23, 50), 10, "png")); //fes250
 
         service.addSubProductToProduct(mosaicA, radaStandard);
         service.addSubProductToProduct(mosaicB, radaStandard);
@@ -123,15 +118,15 @@ public class DmnStageApiApplication implements CommandLineRunner {
         service.addSubProductToProduct(bassinTensift, foudreStandard);
 
         service.mergeClientSubProduct((Client) client1, canalIR);
-/*        service.mergeClientSubProduct((Client) client1, canalVS);
+        service.mergeClientSubProduct((Client) client1, canalVS);
         service.mergeClientSubProduct((Client) client1, canalWV);
         service.mergeClientSubProduct((Client) client1, canalIRNB);
         service.mergeClientSubProduct((Client) client1, canalHRV);
-        service.mergeClientSubProduct((Client) client1, pouvoirPrecipitant);*/
+        service.mergeClientSubProduct((Client) client1, pouvoirPrecipitant);
         service.mergeClientSubProduct((Client) client1, bispectrale);
         service.mergeClientSubProduct((Client) client1, couleurNaturelle);
         service.mergeClientSubProduct((Client) client1, brouillardNuagesBas);
-        /*service.mergeClientSubProduct((Client) client1, convectionOrage);*/
+        service.mergeClientSubProduct((Client) client1, convectionOrage);
         service.mergeClientSubProduct((Client) client2, mosaicA);
         service.mergeClientSubProduct((Client) client2, mosaicB);
         service.mergeClientSubProduct((Client) client2, agadir250);

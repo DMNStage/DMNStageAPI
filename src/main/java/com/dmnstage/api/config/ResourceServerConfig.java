@@ -50,7 +50,7 @@ public class ResourceServerConfig extends ResourceServerConfigurerAdapter {
     public void configure(HttpSecurity http) throws Exception {
         http
                 .authorizeRequests()
-                .antMatchers("/", "/revoke_all_tokens").permitAll()
+                .antMatchers("/", "/publicConfig/**").permitAll()
                 .antMatchers("/**").authenticated()
         ;
     }

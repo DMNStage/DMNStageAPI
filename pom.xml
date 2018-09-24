@@ -6,7 +6,7 @@
     <groupId>com.dmnstage</groupId>
     <artifactId>DMNStageAPI</artifactId>
     <version>0.0.1-SNAPSHOT</version>
-    <!-- [GC GAE] Local: jar GC: war -->
+    <!-- [GC GAE]<-(GOOGLE CLOUD APP ENGINE) | Local: jar GC: war -->
     <packaging>jar</packaging>
     <!--<packaging>war</packaging>-->
 
@@ -79,11 +79,6 @@
             <artifactId>spring-boot-starter-test</artifactId>
             <scope>test</scope>
         </dependency>
-        <!--<dependency>
-            <groupId>org.springframework.boot</groupId>
-            <artifactId>spring-boot-devtools</artifactId>
-            <scope>runtime</scope>
-        </dependency>-->
         <dependency>
             <groupId>org.springframework.security</groupId>
             <artifactId>spring-security-test</artifactId>
@@ -104,11 +99,6 @@
             <version>2.3.3.RELEASE</version>
         </dependency>
 
-        <!--<dependency>-->
-        <!--<groupId>org.springframework.cloud</groupId>-->
-        <!--<artifactId>spring-cloud-starter-oauth2</artifactId>-->
-        <!--</dependency>-->
-
         <!--Spring Security-->
         <dependency>
             <groupId>org.springframework.boot</groupId>
@@ -128,19 +118,6 @@
         </dependency>
 
     </dependencies>
-
-    <!-- Oauth2  -->
-    <!--<dependencyManagement>-->
-    <!--<dependencies>-->
-    <!--<dependency>-->
-    <!--<groupId>org.springframework.cloud</groupId>-->
-    <!--<artifactId>spring-cloud-dependencies</artifactId>-->
-    <!--<version>${spring-cloud.version}</version>-->
-    <!--<type>pom</type>-->
-    <!--<scope>import</scope>-->
-    <!--</dependency>-->
-    <!--</dependencies>-->
-    <!--</dependencyManagement>-->
 
     <build>
         <plugins>

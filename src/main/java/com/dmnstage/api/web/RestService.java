@@ -178,6 +178,17 @@ public class RestService {
         }
     }
 
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
+    @RequestMapping(value = "/usersbyusername/{username}", produces = "application/json", method = RequestMethod.GET)
+    public ResponseEntity<?> getUserByUsername(@PathVariable String username) {
+        User user;
+        if ((user = service.getUserByUsername(username)) == null) {
+            return new ResponseEntity<>("{\"result\":\"L'utilisateur n'existe pas\"}", HttpStatus.NOT_FOUND);
+        } else {
+            return new ResponseEntity<>(user, HttpStatus.OK);
+        }
+    }
+
     @PreAuthorize("hasRole('ROLE_ADMIN') or hasRole('ROLE_CLIENT')")
     @RequestMapping(value = "/clientsbysubproduct/{id}", produces = "application/json", method = RequestMethod.GET)
     public ResponseEntity<?> getClientsBySubProduct(@PathVariable Integer id) {
@@ -540,6 +551,13 @@ public class RestService {
         return new ResponseEntity<>(service.setConfig(config), HttpStatus.OK);
     }
 
+    @RequestMapping(value = "/publicConfig/{key}", method = RequestMethod.GET)
+    public Config getContactEmailConfig(@PathVariable String key) {
+        if (key.equalsIgnoreCase("contactEmail"))
+            return service.getConfigByKey("contactEmail");
+        return null;
+    }
+
     //
     // service.setConfig(new Config("pathFormat", "http://img.dmnstage.com/teledetection/#product#/#subProduct#/#year#-#month#-#day#/#hour##minute#.#ext#"));
     //
@@ -592,8 +610,8 @@ public class RestService {
         url = url.replace("#ext#", subProduct.getExt());
 
         JSONObject jsonObject = new JSONObject();
-        jsonObject.put("subProductId", subProduct.getId());
-        jsonObject.put("subProductName", subProduct.getName());
+/*        jsonObject.put("subProductId", subProduct.getId());
+        jsonObject.put("subProductName", subProduct.getName());*/
 
         if (hour != null && minute != null) {
 
@@ -630,9 +648,10 @@ public class RestService {
                 else
                     tempMinute = String.valueOf(iteratorTime.getMinute());
 
-                url = url.replace("#hour##minute#", tempHour + tempMinute);
-                jsonObject.accumulate("img", url);
-                url = url.replace(tempHour + tempMinute, "#hour##minute#");
+                // Fixed hour/minutes conflicts with date
+                /*url = url.replace("#hour##minute#", tempHour + tempMinute);*/
+                jsonObject.accumulate("img", url.replace("#hour##minute#", tempHour + tempMinute));
+                /*url = url.replace(tempHour + tempMinute, "#hour##minute#");*/
 
                 iteratorTime = iteratorTime.plusMinutes(subProduct.getStep());
             }
